@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <title>Clase del 30/08/2023</title>
+</head>
+
+<body onload="init()">
+    <h1>USUARIOS DEL SISTEMA</h1>
+    <input type="button" value="Nuevo Usuario" onclick="fnCrearUsuario()">
+
+    <div class="divForm" hidden>
+        <h2>Nuevo Usuario</h2>
+        <div>
+            Nombre: 
+            <input type="text" id="txtName"><br>
+            Email: 
+            <input type="email" id="txtEmail"><br>
+            Edad: 
+            <input type="number" id="txtAge"><br>
+
+            <input type="button" value="Guardar" onclick="fnGuardarUsuario()">
+            <input type="button" value="Cancelar" onclick="fnCancelarCrearUsuario()">
+        </div>
+    </div>
+
+    <div class="divTabla">
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Edad</th>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="./js/user.js"></script>
+    <script src="./js/app.js"></script>
+</body>
+
+</html>     

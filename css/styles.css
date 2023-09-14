@@ -4,6 +4,15 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f0f0f0;
+    /* Agrega márgenes a la derecha e izquierda */
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 /* Encabezado principal */

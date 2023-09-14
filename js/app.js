@@ -27,11 +27,12 @@ function fnCrearUsuario() {
 }
 
 function fnGuardarUsuario() {
+  const id = usersList.length + 1;
   const name = document.querySelector("#txtName");
   const email = document.querySelector("#txtEmail");
   const age = document.querySelector("#txtAge");
 
-  const newUser = new User(name.value, email.value, age.value);
+  const newUser = new User(id, name.value, email.value, age.value);
 
   usersList.push(newUser);
 

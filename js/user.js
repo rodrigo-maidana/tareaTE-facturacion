@@ -1,16 +1,6 @@
-let genUserId = 10;
-
-function User(name, mail, age) {
-  this.id = genUserId++;
+function User(id, name, mail, age) {
+  this.id = id;
   this.nombre = name;
   this.email = mail;
   this.edad = age;
 }
-
-/*const jose = new User('jose', 'jose@m.com', 34);
-
-const persona = {
-    nombre: 'alguien',
-    email: 'un correo',
-    edad: 44
-}*/

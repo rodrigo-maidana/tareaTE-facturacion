@@ -45,3 +45,5 @@ function fnCancelarCrearUsuario() {
   divTabla.removeAttribute("hidden");
   fnActualizarTabla();
 }
+
+function fnCrearAdmin() {}

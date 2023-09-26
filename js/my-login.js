@@ -1,5 +1,5 @@
-const usersList = [];
 let isAuthenticated = false;
+const usersList = [];
 const localStorageList = "tarea-facturacion-rmaidana";
 
 function init() {
@@ -11,14 +11,21 @@ function init() {
     for (let u of users) {
       usersList.push(u);
     }
-  } else {
-    createAdminUser();
   }
 }
 
-function createAdminUser() {
-  const admin = new User(1, "admin", "admin@rodrigomaidana.com", "password");
-  usersList.push(admin);
+function createNewUser(name, username, email, password) {
+  const id = usersList.length++;
+  const newUser = new User(id, name, username, email, password);
+  usersList.push(newUser);
+  usersUpdate();
+}
+
+function usersUpdate() {
+  if (usersList.length === 0) {
+    console.error("No hay usuarios para guardar");
+  }
+  localStorage.setItem(localStorageList, JSON.stringify(usersList));
 }
 
 function verifyCredentials() {
@@ -116,6 +123,10 @@ function verifyRegister() {
     agree.classList.remove("is-invalid");
   }
 
-  // Todos los campos son válidos.
-  return true;
+  createNewUser(name, username, email, password);
+  // Redirigimos al usuario a la página de inicio de sesión.
+  window.location.href = "/index.html";
+
+  // Todos los campos son válidos. Pero no enviamos el formulario para hacerlo localmente
+  return false;
 }

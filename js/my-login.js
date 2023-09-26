@@ -70,7 +70,7 @@ function verifyRegister() {
     name.nextElementSibling.textContent = "El nombre es obligatorio.";
     return false;
   } else {
-    name.classList.add("is-valid");
+    name.classList.remove("is-invalid");
   }
 
   // Valida el campo `username`.
@@ -81,7 +81,7 @@ function verifyRegister() {
       "El nombre de usuario es obligatorio.";
     return false;
   } else {
-    username.classList.add("is-valid");
+    username.classList.remove("is-invalid");
   }
 
   // Valida el campo `email`.
@@ -92,7 +92,7 @@ function verifyRegister() {
       "El correo electrónico no es válido.";
     return false;
   } else {
-    email.classList.add("is-valid");
+    email.classList.remove("is-invalid");
   }
 
   // Valida el campo `password`.
@@ -102,7 +102,7 @@ function verifyRegister() {
     password.nextElementSibling.textContent = "La contraseña es obligatoria.";
     return false;
   } else {
-    password.classList.add("is-valid");
+    password.classList.remove("is-invalid");
   }
 
   // Valida el campo `agree`.
@@ -113,7 +113,7 @@ function verifyRegister() {
       "Debes aceptar los términos y condiciones.";
     return false;
   } else {
-    agree.classList.add("is-valid");
+    agree.classList.remove("is-invalid");
   }
 
   // Todos los campos son válidos.

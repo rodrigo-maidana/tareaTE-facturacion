@@ -52,6 +52,6 @@ function verifyAuth() {
   if (isAuthenticated) {
     console.log("Autenticado");
   } else {
-    window.location.href = "index.html";
+    window.location.href = "/index.html";
   }
 }

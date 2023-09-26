@@ -22,24 +22,30 @@ function createAdminUser() {
 }
 
 function verifyCredentials() {
+  // Obtiene los valores de los campos `username` y `password`.
   const username = document.getElementById("username").value;
   const password = document.getElementById("password").value;
 
-  for (let u of usersList) {
-    if (username === u.username && password === u.password) {
-      isAuthenticated = true;
-      break;
-    }
+  // Valida el campo `username`.
+  if (username === "") {
+    // El campo `username` está vacío.
+    document.getElementById("username").classList.add("is-invalid");
+    document.getElementById("username").nextElementSibling.textContent =
+      "El nombre de usuario es obligatorio.";
+    return false;
   }
 
-  if (isAuthenticated) {
-    console.log("Credenciales correctas");
-    window.location.href = "home.html";
-    return true; // Permite el envío del formulario
-  } else {
-    console.log("Usuario o contraseña incorrectos");
-    return false; // Evita el envío del formulario
+  // Valida el campo `password`.
+  if (password === "") {
+    // El campo `password` está vacío.
+    document.getElementById("password").classList.add("is-invalid");
+    document.getElementById("password").nextElementSibling.textContent =
+      "La contraseña es obligatoria.";
+    return false;
   }
+
+  // Los datos del usuario son válidos.
+  return true;
 }
 
 function verifyAuth() {

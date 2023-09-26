@@ -19,7 +19,7 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Registrarse</h4>
-							<form method="POST" class="my-login-validation" novalidate="">
+							<form method="POST" class="my-login-validation" novalidate="" onsubmit="return verifyRegister()">
 								<div class="form-group">
 									<label for="name">Nombre y Apellido</label>
 									<input id="name" type="text" class="form-control" name="name" required autofocus>

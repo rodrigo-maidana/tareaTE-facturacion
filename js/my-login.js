@@ -38,6 +38,7 @@ function verifyCredentials(event) {
   // Obtiene los valores de los campos `username` y `password`.
   const username = document.getElementById("username");
   const password = document.getElementById("password");
+  const wrongCredentials = document.getElementById("wrongUserOrPassword");
 
   // Valida el campo `username`.
   if (username.value === "") {
@@ -46,6 +47,8 @@ function verifyCredentials(event) {
     username.nextElementSibling.textContent =
       "El nombre de usuario es obligatorio.";
     return false;
+  } else {
+    username.classList.remove("is-invalid");
   }
 
   // Valida el campo `password`.
@@ -54,6 +57,8 @@ function verifyCredentials(event) {
     password.classList.add("is-invalid");
     password.nextElementSibling.textContent = "La contraseña es obligatoria.";
     return false;
+  } else {
+    password.classList.remove("is-invalid");
   }
 
   if (login(username.value, password.value)) {
@@ -65,6 +70,10 @@ function verifyCredentials(event) {
     );
     window.location.href = "/html/home.html";
   } else {
+    wrongCredentials.classList.add("d-block");
+    wrongCredentials.textContent = "Usuario o contraseña incorrectos";
+    password.value = "";
+
     const currentUser = null;
     sessionStorage.setItem(
       "tareaTE-facturacion-currentUser-rmaidana",

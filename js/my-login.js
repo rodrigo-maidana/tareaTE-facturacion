@@ -85,7 +85,7 @@ function verifyCredentials(event) {
     wrongCredentials.classList.add("d-block");
     wrongCredentials.textContent = "Usuario o contraseña incorrectos";
     password.value = "";
-    console.log(usersList);
+    console.log("No se ha creado ningun usuario");
   }
 
   return false;

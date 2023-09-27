@@ -1,64 +1,91 @@
-let isAuthenticated = false;
-const usersList = [];
-const localStorageList = "tarea-facturacion-rmaidana";
+let usersList = [];
 
 function init() {
-  console.log("Pagina completamente cargada");
+  console.log("Página completamente cargada");
 
-  const strUsers = localStorage.getItem(localStorageList);
-  if (strUsers !== null) {
-    const users = JSON.parse(strUsers);
-    for (let u of users) {
-      usersList.push(u);
-    }
+  // Verifica si hay usuarios almacenados en localStorage.
+  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+  if (storedUsers) {
+    usersList = JSON.parse(storedUsers);
   }
 }
 
 function createNewUser(name, username, email, password) {
-  const id = usersList.length++;
-  const newUser = new User(id, name, username, email, password);
+  const id = usersList.length;
+  const newUser = { id, name, username, email, password };
   usersList.push(newUser);
   usersUpdate();
 }
 
-function usersUpdate() {
-  if (usersList.length === 0) {
-    console.error("No hay usuarios para guardar");
-  }
-  localStorage.setItem(localStorageList, JSON.stringify(usersList));
+function getUserByUsername(username) {
+  return usersList.find((user) => user.username === username) || null;
 }
 
-function verifyCredentials() {
+function usersUpdate() {
+  const usersJSON = JSON.stringify(usersList);
+  localStorage.setItem("tareaTE-facturacion-rmaidana", usersJSON);
+}
+
+function login(username, password) {
+  return usersList.some(
+    (user) => user.username === username && user.password === password
+  );
+}
+
+function verifyCredentials(event) {
+  // Evita que el formulario se envíe automáticamente
+  event.preventDefault();
   // Obtiene los valores de los campos `username` y `password`.
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+  const username = document.getElementById("username");
+  const password = document.getElementById("password");
 
   // Valida el campo `username`.
-  if (username === "") {
+  if (username.value === "") {
     // El campo `username` está vacío.
-    document.getElementById("username").classList.add("is-invalid");
-    document.getElementById("username").nextElementSibling.textContent =
+    username.classList.add("is-invalid");
+    username.nextElementSibling.textContent =
       "El nombre de usuario es obligatorio.";
     return false;
   }
 
   // Valida el campo `password`.
-  if (password === "") {
+  if (password.value === "") {
     // El campo `password` está vacío.
-    document.getElementById("password").classList.add("is-invalid");
-    document.getElementById("password").nextElementSibling.textContent =
-      "La contraseña es obligatoria.";
+    password.classList.add("is-invalid");
+    password.nextElementSibling.textContent = "La contraseña es obligatoria.";
     return false;
   }
 
-  // Los datos del usuario son válidos.
-  return true;
+  if (login(username.value, password.value)) {
+    const logedUser = getUserByUsername(username.value);
+    const currentUser = JSON.stringify(logedUser);
+    sessionStorage.setItem(
+      "tareaTE-facturacion-currentUser-rmaidana",
+      currentUser
+    );
+    window.location.href = "/html/home.html";
+  } else {
+    const currentUser = null;
+    sessionStorage.setItem(
+      "tareaTE-facturacion-currentUser-rmaidana",
+      currentUser
+    );
+  }
+
+  return false;
 }
 
-function verifyAuth() {
-  if (isAuthenticated) {
-    console.log("Autenticado");
+function verifyAuthUser() {
+  // Verifica si hay un usuario iniciado al momento
+  const storedUser = sessionStorage.getItem(
+    "tareaTE-facturacion-currentUser-rmaidana"
+  );
+  const currentUser = JSON.parse(storedUser);
+
+  if (currentUser !== null) {
+    console.log("Usuario autenticado:", currentUser.username);
   } else {
+    console.log("Usuario no autenticado. Redirigiendo a la página de inicio.");
     window.location.href = "/index.html";
   }
 }
@@ -123,10 +150,29 @@ function verifyRegister() {
     agree.classList.remove("is-invalid");
   }
 
-  createNewUser(name, username, email, password);
+  createNewUser(name.value, username.value, email.value, password.value);
   // Redirigimos al usuario a la página de inicio de sesión.
   window.location.href = "/index.html";
 
   // Todos los campos son válidos. Pero no enviamos el formulario para hacerlo localmente
   return false;
+}
+
+function currentUsertoString() {
+  const storedUser = sessionStorage.getItem(
+    "tareaTE-facturacion-currentUser-rmaidana"
+  );
+  const currentUser = JSON.parse(storedUser);
+  // Crea una cadena con los detalles del usuario
+  const userDetails = `
+      <div>ID: ${currentUser.id}</div>
+      <div>Nombre: ${currentUser.name}</div>
+      <div>Nombre de usuario: ${currentUser.username}</div>
+      <div>Email: ${currentUser.email}</div>
+      <div>Contraseña: ${currentUser.password}</div>
+    `;
+
+  // Muestra los detalles del usuario en un elemento con id "userDetails"
+  const userDetailsElement = document.getElementById("userDetails");
+  userDetailsElement.innerHTML = userDetails;
 }

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="/css/my-login.css">
 </head>
-<body class="my-login-page">
+<body class="my-login-page" onload="init()">
 	<section class="h-100">
 		<div class="container h-100">
 			<div class="row justify-content-md-center h-100">
@@ -19,7 +19,7 @@
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Registrarse</h4>
-							<form method="GET" class="my-login-validation" novalidate="" onsubmit="return verifyRegister()">
+							<form method="POST" class="my-login-validation" novalidate="" onsubmit="return verifyRegister()">
 								<div class="form-group">
 									<label for="name">Nombre y Apellido</label>
 									<input id="name" type="text" class="form-control" name="name" required autofocus>

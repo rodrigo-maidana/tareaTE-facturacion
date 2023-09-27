@@ -11,7 +11,7 @@ function init() {
 }
 
 function createNewUser(name, username, email, password) {
-  const id = usersList.length;
+  const id = usersList.length + 1;
   const newUser = { id, name, username, email, password };
   usersList.push(newUser);
   usersUpdate();
@@ -61,24 +61,31 @@ function verifyCredentials(event) {
     password.classList.remove("is-invalid");
   }
 
-  if (login(username.value, password.value)) {
-    const logedUser = getUserByUsername(username.value);
-    const currentUser = JSON.stringify(logedUser);
-    sessionStorage.setItem(
-      "tareaTE-facturacion-currentUser-rmaidana",
-      currentUser
-    );
-    window.location.href = "/html/home.html";
-  } else {
+  try {
+    if (login(username.value, password.value)) {
+      const logedUser = getUserByUsername(username.value);
+      const currentUser = JSON.stringify(logedUser);
+      sessionStorage.setItem(
+        "tareaTE-facturacion-currentUser-rmaidana",
+        currentUser
+      );
+      window.location.href = "/html/home.html";
+    } else {
+      wrongCredentials.classList.add("d-block");
+      wrongCredentials.textContent = "Usuario o contraseña incorrectos";
+      password.value = "";
+
+      const currentUser = null;
+      sessionStorage.setItem(
+        "tareaTE-facturacion-currentUser-rmaidana",
+        currentUser
+      );
+    }
+  } catch (error) {
     wrongCredentials.classList.add("d-block");
     wrongCredentials.textContent = "Usuario o contraseña incorrectos";
     password.value = "";
-
-    const currentUser = null;
-    sessionStorage.setItem(
-      "tareaTE-facturacion-currentUser-rmaidana",
-      currentUser
-    );
+    console.log(usersList);
   }
 
   return false;

@@ -11,7 +11,7 @@ function init() {
 
   // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
   window.onpopstate = (event) => {
-    history.replaceState(null, null, document.location.href);
+    verifyAuthUser();
   };
 }
 

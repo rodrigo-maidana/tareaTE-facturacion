@@ -115,7 +115,7 @@ function verifyAuthUser() {
     console.log("Usuario autenticado:", currentUser.username);
   } else {
     console.log("Usuario no autenticado. Redirigiendo a la página de inicio.");
-    window.location.href = "/index.html";
+    window.location.href = "/";
   }
 }
 
@@ -181,7 +181,7 @@ function verifyRegister() {
 
   createNewUser(name.value, username.value, email.value, password.value);
   // Redirigimos al usuario a la página de inicio de sesión.
-  window.location.href = "/index.html";
+  window.location.href = "/";
 
   // Todos los campos son válidos. Pero no enviamos el formulario para hacerlo localmente
   return false;

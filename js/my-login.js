@@ -32,6 +32,14 @@ function login(username, password) {
   );
 }
 
+function logOut() {
+  const currentUser = null;
+  sessionStorage.setItem(
+    "tareaTE-facturacion-currentUser-rmaidana",
+    currentUser
+  );
+}
+
 function verifyCredentials(event) {
   // Evita que el formulario se envíe automáticamente
   event.preventDefault();
@@ -172,23 +180,4 @@ function verifyRegister() {
 
   // Todos los campos son válidos. Pero no enviamos el formulario para hacerlo localmente
   return false;
-}
-
-function currentUsertoString() {
-  const storedUser = sessionStorage.getItem(
-    "tareaTE-facturacion-currentUser-rmaidana"
-  );
-  const currentUser = JSON.parse(storedUser);
-  // Crea una cadena con los detalles del usuario
-  const userDetails = `
-      <div>ID: ${currentUser.id}</div>
-      <div>Nombre: ${currentUser.name}</div>
-      <div>Nombre de usuario: ${currentUser.username}</div>
-      <div>Email: ${currentUser.email}</div>
-      <div>Contraseña: ${currentUser.password}</div>
-    `;
-
-  // Muestra los detalles del usuario en un elemento con id "userDetails"
-  const userDetailsElement = document.getElementById("userDetails");
-  userDetailsElement.innerHTML = userDetails;
 }

@@ -8,6 +8,11 @@ function init() {
   if (storedUsers) {
     usersList = JSON.parse(storedUsers);
   }
+
+  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
+  window.onpopstate = (event) => {
+    location.reload();
+  };
 }
 
 function createNewUser(name, username, email, password) {

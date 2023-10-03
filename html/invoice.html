@@ -38,11 +38,7 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Datos del cliente</h2>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Identificación"
-          />
+          <input type="text" class="form-control" placeholder="Documento" />
           <input type="text" class="form-control" placeholder="Nombre" />
           <input type="text" class="form-control" placeholder="Dirección" />
           <input type="text" class="form-control" placeholder="Teléfono" />
@@ -50,48 +46,53 @@
         <div class="col-md-6">
           <h2>Datos de la factura</h2>
           <input type="text" class="form-control" placeholder="Fecha" />
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Número de factura"
-          />
-          <input type="text" class="form-control" placeholder="Total" />
+          <input type="text" class="form-control" placeholder="Nro. Factura" />
         </div>
       </div>
       <hr />
       <div class="row">
         <div class="col-md-12">
           <h2>Detalles de los productos</h2>
-          <table class="table table-bordered">
+          <table class="table table-bordered" id="product-details-table">
             <thead>
               <tr>
                 <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Precio unitario</th>
-                <th>Subtotal</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>Producto 1</td>
-                <td>1</td>
-                <td>100</td>
-                <td>100</td>
+                <td>
+                  <input type="text" class="form-control" />
+                </td>
+                <td>
+                  <input type="number" class="form-control" />
+                </td>
+                <td>
+                  <input type="number" class="form-control" />
+                </td>
               </tr>
-              <tr>
-                <td>Producto 2</td>
-                <td>2</td>
-                <td>50</td>
-                <td>100</td>
-              </tr>
+              <tr class="d-none"></tr>
             </tbody>
           </table>
+          <div class="col-md-auto ml-auto">
+            <button
+              id="newRowButton"
+              class="btn btn-primary"
+              onclick="addNewRow()"
+            >
+              Agregar Detalle
+            </button>
+          </div>
         </div>
       </div>
       <hr />
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary">Generar factura</button>
+          <button class="btn btn-primary" onclick="createNewInvonce()">
+            Generar factura
+          </button>
         </div>
       </div>
     </div>
@@ -113,5 +114,6 @@
     ></script>
     <script src="/js/my-login.js"></script>
     <script src="/js/User.js"></script>
+    <script src="/js/invoice.js"></script>
   </body>
 </html>

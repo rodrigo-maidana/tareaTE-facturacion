@@ -74,6 +74,14 @@
           />
         </div>
       </div>
+      <br />
+      <div class="row">
+        <div class="col-md-12">
+          <button class="btn btn-primary" onclick="createNewInvoice()">
+            Generar factura
+          </button>
+        </div>
+      </div>
       <hr />
       <div class="row">
         <div class="col-md-12">
@@ -82,13 +90,6 @@
         </div>
       </div>
       <hr />
-      <div class="row">
-        <div class="col-md-12">
-          <button class="btn btn-primary" onclick="createNewInvoice()">
-            Generar factura
-          </button>
-        </div>
-      </div>
     </div>
 
     <script
@@ -117,6 +118,12 @@
       const invoiceDateInput = document.getElementById("invoiceDate");
       invoiceDateInput.value = todaysDate;
 
+      const storedInvoices = localStorage.getItem(
+        "tareaTE-facturacion-invoiceList-rmaidana"
+      );
+      if (storedInvoices) {
+        invoiceList = JSON.parse(storedInvoices);
+      }
       const invoiceNumberInput = document.getElementById("invoiceNumber");
       let invoiceAmount = invoiceList.length;
       invoiceAmount++;

@@ -9,12 +9,19 @@ function invoiceListUpdate() {
 }
 
 function formatDate(date) {
+  // Crear un objeto de fecha con la fecha recibida
   const newDate = new Date(date);
-  const dia = newDate.getDate().toString().padStart(2, "0");
-  const mes = (newDate.getMonth() + 1).toString().padStart(2, "0"); // Los meses son indexados desde 0
-  const año = newDate.getFullYear().toString();
 
-  return `${dia}-${mes}-${año}`;
+  // Convertir a medianoche en UTC
+  newDate.setUTCHours(0, 0, 0, 0);
+
+  // Extraer día, mes y año
+  const day = newDate.getUTCDate().toString().padStart(2, "0");
+  const month = (newDate.getUTCMonth() + 1).toString().padStart(2, "0"); // Los meses son indexados desde 0
+  const year = newDate.getUTCFullYear().toString();
+
+  // Formatear la fecha en el formato DD-MM-AAAA
+  return `${day}-${month}-${year}`;
 }
 
 function Invoice(

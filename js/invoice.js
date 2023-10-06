@@ -76,8 +76,6 @@ function updateInvoiceList() {
     buff.push("<td>" + tempInvoice.invoiceNumber + "</td>");
     buff.push("<td>" + getCurrentUser().name + "</td>");
     buff.push("<td>" + tempInvoice.concept + "</td>");
-    buff.push("<td>");
-    buff.push("</td>");
     buff.push("</tr>");
   }
 
@@ -122,7 +120,10 @@ function createNewInvoice() {
   name.value = "";
   address.value = "";
   phone.value = "";
-  invoiceNumber.value = "";
+  let invoiceAmount = invoiceList.length;
+  invoiceAmount++;
+  invoiceNumber.value = invoiceAmount;
   alert("La factura se ha guardado correctamente!");
+  invoiceListUpdate();
   updateInvoiceList();
 }

@@ -78,26 +78,7 @@
       <div class="row">
         <div class="col-md-12">
           <h2>Ultimas facturas cargadas</h2>
-          <div class="invoiceTable">
-            <table class="table table-bordered" id="prev-invoice-list">
-              <thead>
-                <tr style="vertical-align: middle">
-                  <th>ID</th>
-                  <th>Documento</th>
-                  <th>Razon social</th>
-                  <th>Dirección</th>
-                  <th>Teléfono</th>
-                  <th>Fecha</th>
-                  <th>Número de Factura</th>
-                  <th>Vendedor</th>
-                  <th>Detalles del Servicio</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="d-none"></tr>
-              </tbody>
-            </table>
-          </div>
+          <div class="invoiceTable"></div>
         </div>
       </div>
       <hr />
@@ -135,6 +116,11 @@
       // Establecer la fecha de hoy como valor por defecto en el input
       const invoiceDateInput = document.getElementById("invoiceDate");
       invoiceDateInput.value = todaysDate;
+
+      const invoiceNumberInput = document.getElementById("invoiceNumber");
+      let invoiceAmount = invoiceList.length;
+      invoiceAmount++;
+      invoiceNumberInput.value = invoiceAmount;
     </script>
   </body>
 </html>

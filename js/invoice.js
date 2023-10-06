@@ -55,4 +55,11 @@ function createNewInvoice() {
   );
 
   invoiceList.push(newInvoice);
+
+  doc.value = "";
+  name.value = "";
+  address.value = "";
+  phone.value = "";
+  invoiceNumber.value = "";
+  alert("La factura se ha guardado correctamente!");
 }

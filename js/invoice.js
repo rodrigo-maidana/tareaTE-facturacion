@@ -30,6 +30,8 @@ function addNewRow() {
 function getInvoiceDetails() {}
 
 function createNewInvoice() {
+  verifyAuthUser();
+
   let id = invoiceList.length;
   id++;
   const doc = document.getElementById("clientDoc");
@@ -53,19 +55,4 @@ function createNewInvoice() {
   );
 
   invoiceList.push(newInvoice);
-}
-
-function verifyAuthUser() {
-  // Verifica si hay un usuario iniciado al momento
-  const storedUser = sessionStorage.getItem(
-    "tareaTE-facturacion-currentUser-rmaidana"
-  );
-  const currentUser = JSON.parse(storedUser);
-
-  if (currentUser !== null) {
-    console.log("Usuario autenticado:", currentUser.username);
-  } else {
-    console.log("Usuario no autenticado. Redirigiendo a la página de inicio.");
-    window.location.href = "/";
-  }
 }

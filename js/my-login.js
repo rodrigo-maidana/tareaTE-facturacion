@@ -9,10 +9,19 @@ function init() {
     usersList = JSON.parse(storedUsers);
   }
 
+  const storedInvoices = localStorage.getItem(
+    "tareaTE-facturacion-invoiceList-rmaidana"
+  );
+  if (storedInvoices) {
+    invoiceList = JSON.parse(storedInvoices);
+  }
+
   // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
   window.onpopstate = (event) => {
     verifyAuthUser();
   };
+
+  updateInvoiceList();
 }
 
 function createNewUser(name, username, email, password) {

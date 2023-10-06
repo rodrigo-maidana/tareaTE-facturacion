@@ -74,7 +74,7 @@ function updateInvoiceList() {
     buff.push("<td>" + tempInvoice.phone + "</td>");
     buff.push("<td>" + tempInvoice.date + "</td>");
     buff.push("<td>" + tempInvoice.invoiceNumber + "</td>");
-    buff.push("<td>" + getCurrentUser().name + "</td>");
+    buff.push("<td>" + tempInvoice.seller.name + "</td>");
     buff.push("<td>" + tempInvoice.concept + "</td>");
     buff.push("</tr>");
   }
@@ -120,6 +120,7 @@ function createNewInvoice() {
   name.value = "";
   address.value = "";
   phone.value = "";
+  concept.value = "";
   let invoiceAmount = invoiceList.length;
   invoiceAmount++;
   invoiceNumber.value = invoiceAmount;

@@ -119,6 +119,14 @@ function verifyAuthUser() {
   }
 }
 
+function getCurrentUser() {
+  const storedUser = sessionStorage.getItem(
+    "tareaTE-facturacion-currentUser-rmaidana"
+  );
+  const currentUser = JSON.parse(storedUser);
+  return currentUser;
+}
+
 function verifyRegister() {
   const name = document.getElementById("name");
   const username = document.getElementById("username");

@@ -27,15 +27,45 @@
       <div class="row">
         <div class="col-md-6">
           <h2>Datos del cliente</h2>
-          <input type="text" class="form-control" placeholder="Documento" />
-          <input type="text" class="form-control" placeholder="Nombre" />
-          <input type="text" class="form-control" placeholder="Dirección" />
-          <input type="text" class="form-control" placeholder="Teléfono" />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Documento"
+            id="clientDoc"
+          />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Nombre"
+            id="clientName"
+          />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Dirección"
+            id="clientAddress"
+          />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Teléfono"
+            id="clientPhone"
+          />
         </div>
         <div class="col-md-6">
           <h2>Datos de la factura</h2>
-          <input type="text" class="form-control" placeholder="Fecha" />
-          <input type="text" class="form-control" placeholder="Nro. Factura" />
+          <input
+            type="date"
+            class="form-control"
+            placeholder="Fecha"
+            id="invoiceDate"
+          />
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Nro. Factura"
+            id="invoiceNumber"
+          />
         </div>
       </div>
       <hr />
@@ -53,13 +83,21 @@
             <tbody>
               <tr>
                 <td>
-                  <input type="text" class="form-control" />
+                  <input type="text" class="form-control" id="productName0" />
                 </td>
                 <td>
-                  <input type="number" class="form-control" />
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="productAmount0"
+                  />
                 </td>
                 <td>
-                  <input type="number" class="form-control" />
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="productPrice0"
+                  />
                 </td>
               </tr>
               <tr class="d-none"></tr>
@@ -79,7 +117,7 @@
       <hr />
       <div class="row">
         <div class="col-md-12">
-          <button class="btn btn-primary" onclick="createNewInvonce()">
+          <button class="btn btn-primary" onclick="createNewInvoice()">
             Generar factura
           </button>
         </div>
@@ -104,5 +142,23 @@
     <script src="/js/my-login.js"></script>
     <script src="/js/User.js"></script>
     <script src="/js/invoice.js"></script>
+    <script>
+      // Obtener la fecha de hoy en formato YYYY-MM-DD
+      const todaysDate = new Date().toISOString().split("T")[0];
+
+      // Establecer la fecha de hoy como valor por defecto en el input
+      const invoiceDateInput = document.getElementById("invoiceDate");
+      invoiceDateInput.value = todaysDate;
+    </script>
   </body>
 </html>
+
+<td>
+  <input type="text" class="form-control" id="productName0" />
+</td>
+<td>
+  <input type="number" class="form-control" id="productAmount0" />
+</td>
+<td>
+  <input type="number" class="form-control" id="productPrice0" />
+</td>

@@ -55,14 +55,14 @@ function updateInvoiceList() {
 
   const buff = [];
   buff.push('<table class="table table-bordered" id="prev-invoice-list">');
-  buff.push("  <thead>");
+  buff.push("  <thead style='vertical-align:middle;'>");
   buff.push("    <tr>");
   buff.push("      <th>Id</th>");
   buff.push("      <th>Documento</th>");
   buff.push("      <th>Razon Social</th>");
   buff.push("      <th>Dirección</th>");
   buff.push("      <th>Teléfono</th>");
-  buff.push("      <th>date</th>");
+  buff.push("      <th>Fecha</th>");
   buff.push("      <th>Número de Factura</th>");
   buff.push("      <th>Vendedor</th>");
   buff.push("      <th>Detalles del Servicio</th>");

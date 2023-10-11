@@ -48,48 +48,52 @@ function Invoice(
 
 function updateInvoiceList() {
   const invoiceTable = document.querySelector(".invoiceTable");
-  if (invoiceList.length === 0) {
-    invoiceTable.innerHTML = "No hay facturas cargadas";
-    return;
+  try {
+    if (invoiceList.length === 0) {
+      invoiceTable.innerHTML = "No hay facturas cargadas";
+      return;
+    }
+
+    const buff = [];
+    buff.push('<table class="table table-bordered" id="prev-invoice-list">');
+    buff.push("  <thead style='vertical-align:middle;'>");
+    buff.push("    <tr>");
+    buff.push("      <th>Id</th>");
+    buff.push("      <th>Documento</th>");
+    buff.push("      <th>Razon Social</th>");
+    buff.push("      <th>Dirección</th>");
+    buff.push("      <th>Teléfono</th>");
+    buff.push("      <th>Fecha</th>");
+    buff.push("      <th>Número de Factura</th>");
+    buff.push("      <th>Vendedor</th>");
+    buff.push("      <th>Detalles del Servicio</th>");
+    buff.push("    </tr>");
+    buff.push("  </thead>");
+    buff.push("  <tbody>");
+
+    for (let i = 0; i < invoiceList.length; i++) {
+      const tempInvoice = invoiceList[i];
+
+      buff.push("<tr>");
+      buff.push("<td>" + tempInvoice.id + "</td>");
+      buff.push("<td>" + tempInvoice.doc + "</td>");
+      buff.push("<td>" + tempInvoice.name + "</td>");
+      buff.push("<td>" + tempInvoice.address + "</td>");
+      buff.push("<td>" + tempInvoice.phone + "</td>");
+      buff.push("<td>" + tempInvoice.date + "</td>");
+      buff.push("<td>" + tempInvoice.invoiceNumber + "</td>");
+      buff.push("<td>" + tempInvoice.seller.name + "</td>");
+      buff.push("<td>" + tempInvoice.concept + "</td>");
+      buff.push("</tr>");
+    }
+
+    buff.push("</tbody>");
+    buff.push("</table>");
+
+    invoiceTable.innerHTML = buff.join("\n");
+  } catch (error) {
+    // Captura el error y maneja el comportamiento en caso de error
   }
-
-  const buff = [];
-  buff.push('<table class="table table-bordered" id="prev-invoice-list">');
-  buff.push("  <thead style='vertical-align:middle;'>");
-  buff.push("    <tr>");
-  buff.push("      <th>Id</th>");
-  buff.push("      <th>Documento</th>");
-  buff.push("      <th>Razon Social</th>");
-  buff.push("      <th>Dirección</th>");
-  buff.push("      <th>Teléfono</th>");
-  buff.push("      <th>Fecha</th>");
-  buff.push("      <th>Número de Factura</th>");
-  buff.push("      <th>Vendedor</th>");
-  buff.push("      <th>Detalles del Servicio</th>");
-  buff.push("    </tr>");
-  buff.push("  </thead>");
-  buff.push("  <tbody>");
-
-  for (let i = 0; i < invoiceList.length; i++) {
-    const tempInvoice = invoiceList[i];
-
-    buff.push("<tr>");
-    buff.push("<td>" + tempInvoice.id + "</td>");
-    buff.push("<td>" + tempInvoice.doc + "</td>");
-    buff.push("<td>" + tempInvoice.name + "</td>");
-    buff.push("<td>" + tempInvoice.address + "</td>");
-    buff.push("<td>" + tempInvoice.phone + "</td>");
-    buff.push("<td>" + tempInvoice.date + "</td>");
-    buff.push("<td>" + tempInvoice.invoiceNumber + "</td>");
-    buff.push("<td>" + tempInvoice.seller.name + "</td>");
-    buff.push("<td>" + tempInvoice.concept + "</td>");
-    buff.push("</tr>");
-  }
-
-  buff.push("</tbody>");
-  buff.push("</table>");
-
-  invoiceTable.innerHTML = buff.join("\n");
 }
 
 function createNewInvoice() {

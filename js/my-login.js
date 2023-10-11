@@ -1,27 +1,29 @@
 let usersList = [];
 
 function init() {
-  console.log("Página completamente cargada");
+  try {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
-  if (storedUsers) {
-    usersList = JSON.parse(storedUsers);
-  }
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers);
+    }
 
-  const storedInvoices = localStorage.getItem(
-    "tareaTE-facturacion-invoiceList-rmaidana"
-  );
-  if (storedInvoices) {
-    invoiceList = JSON.parse(storedInvoices);
-  }
+    const storedInvoices = localStorage.getItem(
+      "tareaTE-facturacion-invoiceList-rmaidana"
+    );
+    if (storedInvoices) {
+      invoiceList = JSON.parse(storedInvoices);
+    }
 
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
+    // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
+    window.onpopstate = (event) => {
+      verifyAuthUser();
+    };
 
-  updateInvoiceList();
+    updateInvoiceList();
+  } catch (error) {}
 }
 
 function createNewUser(name, username, email, password) {

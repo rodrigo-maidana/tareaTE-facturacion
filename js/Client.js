@@ -143,6 +143,18 @@ function createNewClient() {
     ruc.classList.remove("is-invalid");
   }
 
+  const isRucTaken = clientList.some((client) => client.ruc === ruc.value);
+
+  if (isRucTaken) {
+    ruc.classList.add("is-invalid");
+    rucErrorMessage.style.display = "block";
+    ruc.value = "";
+    return;
+  } else {
+    ruc.classList.remove("is-invalid");
+    rucErrorMessage.style.display = "none";
+  }
+
   // Crea un nuevo objeto client con los valores obtenidos del HTML
   const newclient = new Client(
     id,

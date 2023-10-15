@@ -1,5 +1,27 @@
 let invoiceList = [];
 
+function initInvoices() {
+  console.log("Página completamente cargada");
+
+  // Verifica si hay usuarios almacenados en localStorage.
+  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+  if (storedUsers) {
+    usersList = JSON.parse(storedUsers);
+  }
+
+  const storedClients = localStorage.getItem(
+    "tareaTE-facturacion-clientList-rmaidana"
+  );
+  if (storedClients) {
+    clientList = JSON.parse(storedClients);
+  }
+
+  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
+  window.onpopstate = (event) => {
+    verifyAuthUser();
+  };
+}
+
 function invoiceListUpdate() {
   const invoiceListJSON = JSON.stringify(invoiceList);
   localStorage.setItem(

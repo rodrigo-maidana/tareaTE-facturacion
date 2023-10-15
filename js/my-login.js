@@ -1,6 +1,6 @@
 let usersList = [];
 
-function initLogin() {
+function init() {
   console.log("Página completamente cargada");
 
   // Verifica si hay usuarios almacenados en localStorage.

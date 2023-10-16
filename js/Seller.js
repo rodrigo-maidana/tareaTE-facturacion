@@ -125,15 +125,6 @@ function createNewSeller() {
   const phone = document.getElementById("sellerPhone");
   const commission = document.getElementById("sellerCommission");
 
-  // Restricción de comisión entre 0 y 100
-  const commissionValue = parseInt(commission.value);
-  if (isNaN(commissionValue) || commissionValue < 0 || commissionValue > 100) {
-    commission.classList.add("is-invalid");
-    return;
-  } else {
-    commission.classList.remove("is-invalid");
-  }
-
   if (!name.value) {
     name.classList.add("is-invalid");
     return;
@@ -158,6 +149,13 @@ function createNewSeller() {
     return;
   }
 
+  if (commission.value < 0 || commission.value > 100 || !commission.value) {
+    commission.classList.add("is-invalid");
+    return;
+  } else {
+    commission.classList.remove("is-invalid");
+  }
+
   // Crea un nuevo objeto seller con los valores obtenidos del HTML
   const newSeller = new Seller(
     id,
@@ -165,7 +163,7 @@ function createNewSeller() {
     ruc.value,
     address.value,
     phone.value,
-    commissionValue
+    commission.value
   );
 
   sellerList.push(newSeller);
@@ -237,7 +235,7 @@ function modifySellerData() {
     return;
   }
 
-  if (commissionValue < 0 || commissionValue > 100 || !commission.value) {
+  if (commission.value < 0 || commission.value > 100 || !commission.value) {
     commission.classList.add("is-invalid");
     return;
   } else {
@@ -248,7 +246,7 @@ function modifySellerData() {
   tempSeller.ruc = ruc.value;
   tempSeller.address = address.value;
   tempSeller.phone = phone.value;
-  tempSeller.commission = commissionValue;
+  tempSeller.commission = commission.value;
   sellerList[tempSeller.id - 1] = tempSeller;
 
   alert("Vendedor modificado correctamente!");

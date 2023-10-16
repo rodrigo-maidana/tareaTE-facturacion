@@ -1,5 +1,6 @@
 let productList = [];
 let statusModify = false;
+let productBeeingModified = 0;
 
 function initProducts() {
   console.log("Página completamente cargada");
@@ -142,14 +143,20 @@ function createNewProduct() {
     code.classList.remove("is-invalid");
   }
 
-  const isCodeTaken = productList.some(
-    (product) => product.code === code.value
-  );
+  if (!price.value) {
+    price.classList.add("is-invalid");
+    return;
+  } else {
+    price.classList.remove("is-invalid");
+  }
 
+  const isCodeTaken = productList.some(
+    (product) => product.code === code.value && product.active === true
+  );
   if (isCodeTaken) {
     code.classList.add("is-invalid");
-    alert("Ya existe un producto con ese CODIGO");
     code.value = "";
+    alert("Ya existe un producte con ese code");
     return;
   }
 
@@ -181,16 +188,19 @@ function modifyProduct(id) {
 
   verifyAuthUser();
 
+  const tempProduct = getProduct(id);
+
   const code = document.getElementById("productCode");
   const name = document.getElementById("productName");
   const description = document.getElementById("productDescription");
   const price = document.getElementById("productPrice");
 
-  const tempProduct = getProduct(id);
   code.value = tempProduct.code;
   name.value = tempProduct.name;
   description.value = tempProduct.description;
   price.value = tempProduct.price;
+
+  productBeeingModified = id;
 }
 
 function modifyProductData() {
@@ -199,21 +209,50 @@ function modifyProductData() {
   const description = document.getElementById("productDescription");
   const price = document.getElementById("productPrice");
 
-  const tempProduct = getProductByCode(code.value);
-  const productIndex = productList.findIndex(
-    (product) => product.code === code.value
+  const tempProduct = getProduct(productBeeingModified);
+
+  if (!name.value) {
+    name.classList.add("is-invalid");
+    return;
+  } else {
+    name.classList.remove("is-invalid");
+  }
+
+  if (!code.value) {
+    code.classList.add("is-invalid");
+    return;
+  } else {
+    code.classList.remove("is-invalid");
+  }
+
+  if (!price.value) {
+    price.classList.add("is-invalid");
+    return;
+  } else {
+    price.classList.remove("is-invalid");
+  }
+
+  const isCodeTaken = productList.some(
+    (product) => product.code === code.value && product.active === true
   );
+  if (isCodeTaken && tempProduct.code !== code.value) {
+    code.classList.add("is-invalid");
+    code.value = "";
+    alert("Ya existe un producte con ese code");
+    return;
+  }
 
   tempProduct.name = name.value;
   tempProduct.code = code.value;
   tempProduct.description = description.value;
   tempProduct.price = parseFloat(price.value);
 
-  productList[productIndex] = tempProduct;
+  productList[tempProduct.id - 1] = tempProduct;
 
   alert("Producto modificado correctamente!");
   productListUpdate();
   updateProductList();
+  window.location.reload();
 }
 
 function cancelModifyProductData() {

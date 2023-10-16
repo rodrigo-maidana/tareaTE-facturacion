@@ -1,5 +1,6 @@
 let clientList = [];
 let statusModify = false;
+let clientBeeingModified = 0;
 
 function initClients() {
   console.log("Página completamente cargada");
@@ -143,7 +144,9 @@ function createNewClient() {
     ruc.classList.remove("is-invalid");
   }
 
-  const isRucTaken = clientList.some((client) => client.ruc === ruc.value);
+  const isRucTaken = clientList.some(
+    (client) => client.ruc === ruc.value && client.active === true
+  );
   if (isRucTaken) {
     ruc.classList.add("is-invalid");
     ruc.value = "";
@@ -189,6 +192,8 @@ function modifyClient(id) {
   name.value = tempClient.name;
   address.value = tempClient.address;
   phone.value = tempClient.phone;
+
+  clientBeeingModified = tempClient.id;
 }
 
 function modifyClientData() {
@@ -197,21 +202,43 @@ function modifyClientData() {
   const address = document.getElementById("clientAddress");
   const phone = document.getElementById("clientPhone");
 
-  const tempClient = getClientByRuc(ruc.value);
-  const clientIndex = clientList.findIndex(
-    (client) => client.ruc === ruc.value
+  const tempClient = getClient(clientBeeingModified);
+
+  if (!name.value) {
+    name.classList.add("is-invalid");
+    return;
+  } else {
+    name.classList.remove("is-invalid");
+  }
+
+  if (!ruc.value) {
+    ruc.classList.add("is-invalid");
+    return;
+  } else {
+    ruc.classList.remove("is-invalid");
+  }
+
+  const isRucTaken = clientList.some(
+    (client) => client.ruc === ruc.value && client.active === true
   );
+  if (isRucTaken && tempClient.ruc !== ruc.value) {
+    ruc.classList.add("is-invalid");
+    ruc.value = "";
+    alert("Ya existe un cliente con ese RUC");
+    return;
+  }
 
   tempClient.name = name.value;
   tempClient.ruc = ruc.value;
   tempClient.address = address.value;
   tempClient.phone = phone.value;
-
-  clientList[clientIndex] = tempClient;
+  clientList[tempClient.id - 1] = tempClient;
 
   alert("Cliente modificado correctamente!");
   clientListUpdate();
   updateClientList();
+  clientBeeingModified = 0;
+  window.location.reload();
 }
 
 function cancelModifyClientData() {
@@ -229,6 +256,7 @@ function cancelModifyClientData() {
   ruc.value = "";
   address.value = "";
   phone.value = "";
+  clientBeeingModified = 0;
 }
 
 function deleteClient(id) {

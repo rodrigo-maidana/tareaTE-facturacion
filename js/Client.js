@@ -1,5 +1,5 @@
 let clientList = [];
-let statusModify = false;
+let clientStatusModify = false;
 let clientBeeingModified = 0;
 
 function initClients() {
@@ -176,7 +176,7 @@ function createNewClient() {
 
 function modifyClient(id) {
   //modificar interfaz
-  if (statusModify === false) {
+  if (clientStatusModify === false) {
     toggleButtons();
   }
 
@@ -285,5 +285,5 @@ function toggleButtons() {
   newClientButton.hidden = !newClientButton.hidden;
   modifyClientButton.hidden = !modifyClientButton.hidden;
   cancelModifyClientButton.hidden = !cancelModifyClientButton.hidden;
-  statusModify = !statusModify;
+  clientStatusModify = !clientStatusModify;
 }

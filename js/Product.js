@@ -1,5 +1,5 @@
 let productList = [];
-let statusModify = false;
+let productStatusModify = false;
 let productBeeingModified = 0;
 
 function initProducts() {
@@ -182,7 +182,7 @@ function createNewProduct() {
 
 function modifyProduct(id) {
   //modificar interfaz
-  if (statusModify === false) {
+  if (productStatusModify === false) {
     toggleButtons();
   }
 
@@ -298,5 +298,5 @@ function toggleButtons() {
   newProductButton.hidden = !newProductButton.hidden;
   modifyProductButton.hidden = !modifyProductButton.hidden;
   cancelModifyProductButton.hidden = !cancelModifyProductButton.hidden;
-  statusModify = !statusModify;
+  productStatusModify = !productStatusModify;
 }

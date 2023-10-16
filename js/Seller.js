@@ -1,12 +1,20 @@
 let sellerList = [];
-let statusModify = false;
+let sellerStatusModify = false;
 let sellerBeingModified = 0;
 
 function initSellers() {
   console.log("Página completamente cargada");
 
   // Verifica si hay usuarios almacenados en localStorage.
-  const storedSellers = localStorage.getItem("tareaTE-facturacion-sellerList");
+  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+  if (storedUsers) {
+    usersList = JSON.parse(storedUsers);
+  }
+
+  // Verifica si hay usuarios almacenados en localStorage.
+  const storedSellers = localStorage.getItem(
+    "tareaTE-facturacion-sellerList-rmaidana"
+  );
   if (storedSellers) {
     sellerList = JSON.parse(storedSellers);
   }
@@ -58,7 +66,10 @@ function getSellerByRuc(ruc) {
 
 function sellerListUpdate() {
   const sellerListJSON = JSON.stringify(sellerList);
-  localStorage.setItem("tareaTE-facturacion-sellerList", sellerListJSON);
+  localStorage.setItem(
+    "tareaTE-facturacion-sellerList-rmaidana",
+    sellerListJSON
+  );
 }
 
 function updateSellerList() {
@@ -180,7 +191,7 @@ function createNewSeller() {
 
 function modifySeller(id) {
   //modificar interfaz
-  if (statusModify === false) {
+  if (sellerStatusModify === false) {
     toggleButtons();
   }
 
@@ -302,5 +313,5 @@ function toggleButtons() {
   newSellerButton.hidden = !newSellerButton.hidden;
   modifySellerButton.hidden = !modifySellerButton.hidden;
   cancelModifySellerButton.hidden = !cancelModifySellerButton.hidden;
-  statusModify = !statusModify;
+  sellerStatusModify = !sellerStatusModify;
 }

@@ -1,4 +1,5 @@
 let invoiceList = [];
+let invoiceDetails = [];
 
 function initInvoices() {
   console.log("Página completamente cargada");
@@ -16,10 +17,33 @@ function initInvoices() {
     clientList = JSON.parse(storedClients);
   }
 
+  const storedSellers = localStorage.getItem(
+    "tareaTE-facturacion-sellerList-rmaidana"
+  );
+  if (storedSellers) {
+    sellerList = JSON.parse(storedSellers);
+  }
+
+  const storedInvoices = localStorage.getItem(
+    "tareaTE-facturacion-invoiceList-rmaidana"
+  );
+  if (storedInvoices) {
+    invoiceList = JSON.parse(storedInvoices);
+  }
+  // Verifica si hay productos almacenados en localStorage.
+  const storedProducts = localStorage.getItem(
+    "tareaTE-facturacion-productList-rmaidana"
+  );
+  if (storedProducts) {
+    productList = JSON.parse(storedProducts);
+  }
   // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
   window.onpopstate = (event) => {
     verifyAuthUser();
   };
+  showClientsAndSellers();
+  showProducts();
+  updateInvoiceTable();
 }
 
 function invoiceListUpdate() {
@@ -46,118 +70,205 @@ function formatDate(date) {
   return `${day}-${month}-${year}`;
 }
 
-function Invoice(
-  id,
-  doc,
-  name,
-  address,
-  phone,
-  concept,
-  date,
-  invoiceNumber,
-  seller
-) {
+function Invoice(id, client, date, invoiceNumber, detail, condition, seller) {
   this.id = id;
-  this.doc = doc;
-  this.name = name;
-  this.address = address;
-  this.phone = phone;
-  this.concept = concept;
+  this.client = client;
   this.date = date;
   this.invoiceNumber = invoiceNumber;
+  this.detail = detail;
+  this.condition = condition;
   this.seller = seller;
+  this.active = true;
 }
 
-function updateInvoiceList() {
-  const invoiceTable = document.querySelector(".invoiceTable");
-  try {
-    if (invoiceList.length === 0) {
-      invoiceTable.innerHTML = "No hay facturas cargadas";
-      return;
-    }
+function Detail(product, amount) {
+  this.product = product;
+  this.amount = amount;
+}
 
-    const buff = [];
-    buff.push('<table class="table table-bordered" id="prev-invoice-list">');
-    buff.push("  <thead style='vertical-align:middle;'>");
-    buff.push("    <tr>");
-    buff.push("      <th>Id</th>");
-    buff.push("      <th>Documento</th>");
-    buff.push("      <th>Razon Social</th>");
-    buff.push("      <th>Dirección</th>");
-    buff.push("      <th>Teléfono</th>");
-    buff.push("      <th>Fecha</th>");
-    buff.push("      <th>Número de Factura</th>");
-    buff.push("      <th>Vendedor</th>");
-    buff.push("      <th>Detalles del Servicio</th>");
-    buff.push("    </tr>");
-    buff.push("  </thead>");
-    buff.push("  <tbody>");
+function showClientsAndSellers() {
+  const storedSellers = localStorage.getItem(
+    "tareaTE-facturacion-sellerList-rmaidana"
+  );
+  if (storedSellers) {
+    const sellerList = JSON.parse(storedSellers);
+    // Llena el elemento select con opciones basadas en los vendedores
+    const sellersSelect = document.getElementById("selectSeller");
+    sellerList.forEach((seller) => {
+      if (seller.active == true) {
+        const option = document.createElement("option");
+        option.value = seller.id; // Puedes usar el índice del vendedor como valor
+        option.text = seller.name + " - " + seller.ruc; // Muestra el nombre del vendedor como texto de opción
+        sellersSelect.appendChild(option);
+      }
+    });
+  }
 
-    for (let i = 0; i < invoiceList.length; i++) {
-      const tempInvoice = invoiceList[i];
+  const storedClients = localStorage.getItem(
+    "tareaTE-facturacion-clientList-rmaidana"
+  );
 
-      buff.push("<tr>");
-      buff.push("<td>" + tempInvoice.id + "</td>");
-      buff.push("<td>" + tempInvoice.doc + "</td>");
-      buff.push("<td>" + tempInvoice.name + "</td>");
-      buff.push("<td>" + tempInvoice.address + "</td>");
-      buff.push("<td>" + tempInvoice.phone + "</td>");
-      buff.push("<td>" + tempInvoice.date + "</td>");
-      buff.push("<td>" + tempInvoice.invoiceNumber + "</td>");
-      buff.push("<td>" + tempInvoice.seller.name + "</td>");
-      buff.push("<td>" + tempInvoice.concept + "</td>");
-      buff.push("</tr>");
-    }
+  if (storedClients) {
+    const clientList = JSON.parse(storedClients);
+    // Llena el elemento select con opciones basadas en los clientes
+    const clientsSelect = document.getElementById("selectClient");
 
-    buff.push("</tbody>");
-    buff.push("</table>");
+    clientList.forEach((client) => {
+      if (client.active == true) {
+        const option = document.createElement("option");
+        option.value = client.id;
+        option.text = client.name + " - " + client.ruc;
+        clientsSelect.appendChild(option);
+      }
+    });
+  }
+}
 
-    invoiceTable.innerHTML = buff.join("\n");
-  } catch (error) {
-    // Captura el error y maneja el comportamiento en caso de error
+function showProducts() {
+  const storedProducts = localStorage.getItem(
+    "tareaTE-facturacion-productList-rmaidana"
+  );
+
+  if (storedProducts) {
+    const productList = JSON.parse(storedProducts);
+    // Llena el elemento select con opciones basadas en los clientes
+    const productSelect = document.getElementById("selectProduct");
+    productList.forEach((product) => {
+      if (product.active == true) {
+        const option = document.createElement("option");
+        option.value = product.id;
+        option.text =
+          product.name +
+          " - " +
+          product.description +
+          " (Cod: " +
+          product.code +
+          ")";
+        productSelect.appendChild(option);
+      }
+    });
   }
 }
 
 function createNewInvoice() {
-  verifyAuthUser();
-
   let id = invoiceList.length;
   id++;
-  const doc = document.getElementById("clientDoc");
-  const name = document.getElementById("clientName");
-  const address = document.getElementById("clientAddress");
-  const phone = document.getElementById("clientPhone");
-  const concept = document.getElementById("invoiceConcept");
-  const date = document.getElementById("invoiceDate");
-  const invoiceNumber = document.getElementById("invoiceNumber");
-  const seller = getCurrentUser();
+  const selectClient = document.getElementById("selectClient");
+  const selectSeller = document.getElementById("selectSeller");
+  const selectCondition = document.getElementById("selectCondition");
 
-  const newDate = formatDate(date.value);
+  if (selectClient.value === "null") {
+    alert("Seleccione un Cliente");
+    return;
+  }
 
-  // Crea un nuevo objeto Invoice con los valores obtenidos del HTML
-  const newInvoice = new Invoice(
+  if (selectSeller.value === "null") {
+    alert("Seleccione un Vendedor");
+    return;
+  }
+
+  const client = getClient(parseInt(selectClient.value));
+  const seller = getSeller(parseInt(selectSeller.value));
+
+  const tempInvoice = new Invoice(
     id,
-    doc.value,
-    name.value,
-    address.value,
-    phone.value,
-    concept.value,
-    newDate,
-    invoiceNumber.value,
+    client,
+    formatDate(new Date()),
+    1000 + id,
+    invoiceDetails,
+    selectCondition.value,
     seller
   );
 
-  invoiceList.push(newInvoice);
-
-  doc.value = "";
-  name.value = "";
-  address.value = "";
-  phone.value = "";
-  concept.value = "";
-  let invoiceAmount = invoiceList.length;
-  invoiceAmount++;
-  invoiceNumber.value = invoiceAmount;
-  alert("La factura se ha guardado correctamente!");
+  invoiceList.push(tempInvoice);
   invoiceListUpdate();
-  updateInvoiceList();
+  updateInvoiceTable();
+  window.location.reload();
+}
+
+function updateInvoiceTable() {
+  const invoiceTable = document.querySelector(".invoiceTable");
+  const buff = [];
+  buff.push('<table class="table table-bordered">');
+  buff.push("  <thead style='vertical-align:middle;'>");
+  buff.push("    <tr>");
+  buff.push("      <th>#</th>");
+  buff.push("      <th>Razon Social</th>");
+  buff.push("      <th>Vendedor</th>");
+  buff.push("      <th>Condicion</th>");
+  buff.push("      <th>Total</th>");
+  buff.push("    </tr>");
+  buff.push("  </thead>");
+  buff.push("  <tbody>");
+
+  for (let i = 0; i < invoiceList.length; i++) {
+    const tempInvoice = invoiceList[i];
+    let total = 0;
+
+    for (let j = 0; j < tempInvoice.detail.length; j++) {
+      total =
+        total +
+        tempInvoice.detail[j].product.price * tempInvoice.detail[j].amount;
+    }
+
+    buff.push("<tr>");
+    buff.push("<td>" + tempInvoice.id + "</td>");
+    buff.push("<td>" + tempInvoice.client.name + "</td>");
+    buff.push("<td>" + tempInvoice.seller.name + "</td>");
+    buff.push("<td>" + tempInvoice.condition + "</td>");
+    buff.push("<td>" + total + "</td>");
+
+    buff.push("</tr>");
+  }
+
+  buff.push("</tbody>");
+  buff.push("</table>");
+
+  invoiceTable.innerHTML = buff.join("\n");
+}
+
+function addInvoiceDetail() {
+  const productSelect = document.getElementById("selectProduct");
+  const productAmount = document.getElementById("productAmount");
+
+  invoiceDetails.push(
+    new Detail(getProduct(parseInt(productSelect.value)), productAmount.value)
+  );
+  updateInvoiceDetails();
+}
+
+function updateInvoiceDetails() {
+  const detailsTable = document.getElementById("invoiceDetails");
+
+  const buff = [];
+  buff.push('<table class="table table-bordered">');
+  buff.push("  <thead style='vertical-align:middle;'>");
+  buff.push("    <tr>");
+  buff.push("      <th>#</th>");
+  buff.push("      <th>Producto</th>");
+  buff.push("      <th>Cantidad</th>");
+  buff.push("      <th>Precio</th>");
+  buff.push("      <th>Subtotal</th>");
+  buff.push("    </tr>");
+  buff.push("  </thead>");
+  buff.push("  <tbody>");
+
+  for (let i = 0; i < invoiceDetails.length; i++) {
+    const tempDetail = invoiceDetails[i];
+    let index = i;
+
+    buff.push("<tr>");
+    buff.push("<td>" + ++index + "</td>");
+    buff.push("<td>" + tempDetail.product.name + "</td>");
+    buff.push("<td>" + tempDetail.amount + "</td>");
+    buff.push("<td>" + tempDetail.product.price + "</td>");
+    buff.push("<td>" + tempDetail.amount * tempDetail.product.price + "</td>");
+
+    buff.push("</tr>");
+  }
+
+  buff.push("</tbody>");
+  buff.push("</table>");
+
+  detailsTable.innerHTML = buff.join("\n");
 }

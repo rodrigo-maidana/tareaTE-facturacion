@@ -238,7 +238,7 @@ function modifyProductData() {
   if (isCodeTaken && tempProduct.code !== code.value) {
     code.classList.add("is-invalid");
     code.value = "";
-    alert("Ya existe un producte con ese code");
+    alert("Ya existe un producte con ese codigo");
     return;
   }
 

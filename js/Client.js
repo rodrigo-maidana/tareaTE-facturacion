@@ -144,15 +144,11 @@ function createNewClient() {
   }
 
   const isRucTaken = clientList.some((client) => client.ruc === ruc.value);
-
   if (isRucTaken) {
     ruc.classList.add("is-invalid");
-    rucErrorMessage.style.display = "block";
     ruc.value = "";
+    alert("Ya existe un cliente con ese RUC");
     return;
-  } else {
-    ruc.classList.remove("is-invalid");
-    rucErrorMessage.style.display = "none";
   }
 
   // Crea un nuevo objeto client con los valores obtenidos del HTML

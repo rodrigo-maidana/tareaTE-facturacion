@@ -10,7 +10,7 @@
       crossorigin="anonymous"
     />
   </head>
-  <body onload="initClients(); verifyAuthUser();">
+  <body onload="initProducts(); verifyAuthUser();">
     <div class="container mt-2">
       <header class="d-flex justify-content-between">
         <div>
@@ -24,35 +24,38 @@
           <a class="navbar-brand" href="/" onclick="logOut()">Cerrar Sesion</a>
         </div>
       </header>
-      <h1>Modulo Clientes</h1>
+      <h1>Modulo Productos</h1>
       <hr />
       <div class="row">
         <div class="col-md-6">
-          <h2 id="newClientDiv">Crear nuevo cliente</h2>
-          <h2 id="modifyClientDiv" hidden>Modificar cliente</h2>
+          <h2 id="newProductDiv">Crear nuevo producto</h2>
+          <h2 id="modifyProductDiv" hidden>Modificar producto</h2>
           <input
             type="text"
             class="form-control"
             placeholder="Nombre"
-            id="clientName"
+            id="productName"
           />
           <input
             type="text"
             class="form-control"
-            placeholder="Ruc"
-            id="clientRuc"
+            placeholder="Código"
+            id="productCode"
           />
+          <div id="codeErrorMessage" class="invalid-feedback">
+            Ya existe un producto con ese código.
+          </div>
           <input
             type="text"
             class="form-control"
-            placeholder="Dirección"
-            id="clientAddress"
+            placeholder="Descripción"
+            id="productDescription"
           />
           <input
-            type="text"
+            type="number"
             class="form-control"
-            placeholder="Teléfono"
-            id="clientPhone"
+            placeholder="Precio"
+            id="productPrice"
           />
         </div>
       </div>
@@ -61,24 +64,24 @@
         <div class="col-md-12">
           <button
             class="btn btn-primary"
-            id="newClientButton"
-            onclick="createNewClient()"
+            id="newProductButton"
+            onclick="createNewProduct()"
           >
-            Guardar Cliente
+            Guardar Producto
           </button>
           <button
             class="btn btn-primary"
-            id="modifyClientButton"
+            id="modifyProductButton"
             hidden
-            onclick="modifyClientData()"
+            onclick="modifyProductData()"
           >
             Guardar Cambios
           </button>
           <button
             class="btn btn-primary"
-            id="cancelModifyClientButton"
+            id="cancelModifyProductButton"
             hidden
-            onclick="cancelModifyClientData()"
+            onclick="cancelModifyProductData()"
           >
             Cancelar
           </button>
@@ -87,8 +90,8 @@
       <hr />
       <div class="row">
         <div class="col-md-12">
-          <h2>Clientes</h2>
-          <div class="clientsTable"></div>
+          <h2>Productos</h2>
+          <div class="productsTable"></div>
         </div>
       </div>
       <hr />
@@ -110,6 +113,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="/js/my-login.js"></script>
-    <script src="/js/Client.js"></script>
+    <script src="/js/Product.js"></script>
   </body>
 </html>

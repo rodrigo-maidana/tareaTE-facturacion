@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
   </head>
-  <body onload="initClients(); verifyAuthUser();">
+  <body onload="initSellers(); verifyAuthUser();">
     <div class="container mt-2">
       <header class="d-flex justify-content-between">
         <div>
@@ -23,38 +23,44 @@
           <a class="navbar-brand" href="/html/seller.html">Vendedores</a>
         </div>
         <div>
-          <a class="navbar-brand" href="/" onclick="logOut()">Cerrar Sesion</a>
+          <a class="navbar-brand" href="/" onclick="logOut()">Cerrar Sesión</a>
         </div>
       </header>
-      <h1>Modulo Clientes</h1>
+      <h1>Modulo Vendedores</h1>
       <hr />
       <div class="row">
         <div class="col-md-6">
-          <h2 id="newClientDiv">Crear nuevo cliente</h2>
-          <h2 id="modifyClientDiv" hidden>Modificar cliente</h2>
+          <h2 id="newSellerDiv">Crear nuevo Vendedor</h2>
+          <h2 id="modifySellerDiv" hidden>Modificar Vendedor</h2>
           <input
             type="text"
             class="form-control"
             placeholder="Nombre"
-            id="clientName"
+            id="sellerName"
           />
           <input
             type="text"
             class="form-control"
             placeholder="Ruc"
-            id="clientRuc"
+            id="sellerRuc"
           />
           <input
             type="text"
             class="form-control"
             placeholder="Dirección"
-            id="clientAddress"
+            id="sellerAddress"
           />
           <input
             type="text"
             class="form-control"
             placeholder="Teléfono"
-            id="clientPhone"
+            id="sellerPhone"
+          />
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Porcentaje de Comisión"
+            id="sellerCommission"
           />
         </div>
       </div>
@@ -63,24 +69,24 @@
         <div class="col-md-12">
           <button
             class="btn btn-primary"
-            id="newClientButton"
-            onclick="createNewClient()"
+            id="newSellerButton"
+            onclick="createNewSeller()"
           >
-            Guardar Cliente
+            Guardar Vendedor
           </button>
           <button
             class="btn btn-primary"
-            id="modifyClientButton"
+            id="modifySellerButton"
             hidden
-            onclick="modifyClientData()"
+            onclick="modifySellerData()"
           >
             Guardar Cambios
           </button>
           <button
             class="btn btn-primary"
-            id="cancelModifyClientButton"
+            id="cancelModifySellerButton"
             hidden
-            onclick="cancelModifyClientData()"
+            onclick="cancelModifySellerData()"
           >
             Cancelar
           </button>
@@ -89,8 +95,8 @@
       <hr />
       <div class="row">
         <div class="col-md-12">
-          <h2>Clientes</h2>
-          <div class="clientsTable"></div>
+          <h2>Vendedores</h2>
+          <div class="sellersTable"></div>
         </div>
       </div>
       <hr />
@@ -112,6 +118,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="/js/my-login.js"></script>
-    <script src="/js/Client.js"></script>
+    <script src="/js/Seller.js"></script>
   </body>
 </html>

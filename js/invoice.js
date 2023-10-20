@@ -1,6 +1,58 @@
 let invoiceList = [];
 let invoiceDetails = [];
 let detailBeingModified = 0;
+let showingInvoice = {};
+
+function initInvoiceDetails() {
+  console.log("Página completamente cargada");
+
+  // Verifica si hay usuarios almacenados en localStorage.
+  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+  if (storedUsers) {
+    usersList = JSON.parse(storedUsers);
+  }
+
+  const storedClients = localStorage.getItem(
+    "tareaTE-facturacion-clientList-rmaidana"
+  );
+  if (storedClients) {
+    clientList = JSON.parse(storedClients);
+  }
+
+  const storedSellers = localStorage.getItem(
+    "tareaTE-facturacion-sellerList-rmaidana"
+  );
+  if (storedSellers) {
+    sellerList = JSON.parse(storedSellers);
+  }
+
+  const storedInvoices = localStorage.getItem(
+    "tareaTE-facturacion-invoiceList-rmaidana"
+  );
+  if (storedInvoices) {
+    invoiceList = JSON.parse(storedInvoices);
+  }
+
+  const storedProducts = localStorage.getItem(
+    "tareaTE-facturacion-productList-rmaidana"
+  );
+  if (storedProducts) {
+    productList = JSON.parse(storedProducts);
+  }
+
+  const storedShowingInvoice = sessionStorage.getItem(
+    "tareaTE-facturacion-showingInvoice-rmaidana"
+  );
+  if (storedShowingInvoice) {
+    showingInvoice = JSON.parse(storedShowingInvoice);
+  }
+  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
+  window.onpopstate = (event) => {
+    verifyAuthUser();
+  };
+
+  printInvoice();
+}
 
 function initInvoices() {
   console.log("Página completamente cargada");
@@ -151,6 +203,16 @@ function showProducts() {
   }
 }
 
+function getInvoice(id) {
+  for (let i = 0; i < invoiceList.length; i++) {
+    const currentInvoice = invoiceList[i];
+
+    if (currentInvoice.active && currentInvoice.id === id) {
+      return currentInvoice;
+    }
+  }
+}
+
 function createNewInvoice() {
   verifyAuthUser();
   let id = invoiceList.length;
@@ -204,6 +266,7 @@ function updateInvoiceTable() {
   buff.push("      <th>Vendedor</th>");
   buff.push("      <th>Condicion</th>");
   buff.push("      <th>Total</th>");
+  buff.push("      <th>Ver detalles</th>");
   buff.push("    </tr>");
   buff.push("  </thead>");
   buff.push("  <tbody>");
@@ -220,7 +283,14 @@ function updateInvoiceTable() {
     buff.push("<td>" + tempInvoice.client.name + "</td>");
     buff.push("<td>" + tempInvoice.seller.name + "</td>");
     buff.push("<td>" + tempInvoice.condition + "</td>");
-    buff.push("<td>" + total + "</td>");
+    buff.push("<td>" + formatNumber(total) + "</td>");
+    buff.push(
+      "<td class='text-center'>" +
+        "<img src='/img/view.webp' alt='Modificar' width='20' height='20' onclick='showInvoice(" +
+        tempInvoice.id +
+        ")' style='cursor: pointer;'>" +
+        "</td>"
+    );
 
     buff.push("</tr>");
   });
@@ -267,8 +337,12 @@ function updateDetailsTable() {
     buff.push("<td>" + ++index + "</td>");
     buff.push("<td>" + tempDetail.product.name + "</td>");
     buff.push("<td>" + tempDetail.amount + "</td>");
-    buff.push("<td>" + tempDetail.product.price + "</td>");
-    buff.push("<td>" + tempDetail.amount * tempDetail.product.price + "</td>");
+    buff.push("<td>" + formatNumber(tempDetail.product.price) + "</td>");
+    buff.push(
+      "<td>" +
+        formatNumber(tempDetail.amount * tempDetail.product.price) +
+        "</td>"
+    );
     buff.push(
       "<td class='text-center'>" +
         "<img src='/img/pencil.webp' alt='Modificar' width='20' height='20' onclick='modifyDetail(" +
@@ -333,4 +407,78 @@ function cancelModifiedDetail() {
   toggleInvoiceButtons();
   productSelect.value = null;
   productAmount.value = "";
+}
+
+function showInvoice(id) {
+  showingInvoice = getInvoice(id);
+  console.log(showingInvoice);
+  const showingInvoiceJSON = JSON.stringify(showingInvoice);
+  sessionStorage.setItem(
+    "tareaTE-facturacion-showingInvoice-rmaidana",
+    showingInvoiceJSON
+  );
+
+  window.location.href = "/html/invoiceDetails.html";
+}
+
+function printInvoice() {
+  const invoice = showingInvoice;
+  const invoiceDetails = invoice.detail;
+  let totalPrice = 0;
+
+  const detailsTableBody = document.getElementById("detailsTableBody");
+  invoiceDetails.forEach((detail) => {
+    const row = document.createElement("tr");
+    const description = document.createElement("td");
+    const quantity = document.createElement("td");
+    const unitPrice = document.createElement("td");
+    const subtTotal = document.createElement("td");
+
+    description.textContent = detail.product.name;
+    quantity.textContent = detail.amount;
+    unitPrice.textContent = formatNumber(detail.product.price);
+    subtTotal.textContent = formatNumber(detail.amount * detail.product.price);
+    totalPrice += detail.amount * detail.product.price;
+
+    row.appendChild(description);
+    row.appendChild(quantity);
+    row.appendChild(unitPrice);
+    row.appendChild(subtTotal);
+
+    detailsTableBody.appendChild(row);
+  });
+
+  //agrega una fila al final que agregue el total
+  const finalRow = document.createElement("tr");
+  const totalDescription = document.createElement("td");
+  const totalQuantity = document.createElement("td");
+  const totalUnitPrice = document.createElement("td");
+  const totalSubtTotal = document.createElement("td");
+
+  totalDescription.textContent = "TOTAL";
+  totalQuantity.textContent = " ";
+  totalUnitPrice.textContent = " ";
+  totalSubtTotal.textContent = formatNumber(totalPrice);
+  finalRow.style.fontWeight = "bold";
+
+  finalRow.appendChild(totalDescription);
+  finalRow.appendChild(totalQuantity);
+  finalRow.appendChild(totalUnitPrice);
+  finalRow.appendChild(totalSubtTotal);
+  detailsTableBody.appendChild(finalRow);
+}
+
+function formatNumber(number) {
+  const numberString = number.toString();
+  const numberLength = numberString.length;
+  let formattedNumber = "";
+
+  for (let i = 0; i < numberLength; i++) {
+    if (i % 3 === 0 && i !== 0) {
+      formattedNumber = "." + formattedNumber;
+    }
+    formattedNumber = numberString[numberLength - 1 - i] + formattedNumber;
+  }
+
+  return formattedNumber;
 }

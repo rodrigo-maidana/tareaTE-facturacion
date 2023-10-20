@@ -98,7 +98,7 @@ function updateProductList() {
       buff.push("<td>" + tempProduct.name + "</td>");
       buff.push("<td>" + tempProduct.code + "</td>");
       buff.push("<td>" + tempProduct.description + "</td>");
-      buff.push("<td>" + tempProduct.price + "</td>");
+      buff.push("<td>" + formatNumber(tempProduct.price) + "</td>");
       buff.push(
         "<td class='text-center'>" +
           "<img src='/img/pencil.webp' alt='Modificar' width='20' height='20' onclick='modifyProduct(" +
@@ -299,4 +299,19 @@ function toggleButtons() {
   modifyProductButton.hidden = !modifyProductButton.hidden;
   cancelModifyProductButton.hidden = !cancelModifyProductButton.hidden;
   productStatusModify = !productStatusModify;
+}
+
+function formatNumber(number) {
+  const numberString = number.toString();
+  const numberLength = numberString.length;
+  let formattedNumber = "";
+
+  for (let i = 0; i < numberLength; i++) {
+    if (i % 3 === 0 && i !== 0) {
+      formattedNumber = "." + formattedNumber;
+    }
+    formattedNumber = numberString[numberLength - 1 - i] + formattedNumber;
+  }
+
+  return formattedNumber;
 }

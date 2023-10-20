@@ -1,5 +1,6 @@
 let invoiceList = [];
 let invoiceDetails = [];
+let detailBeingModified = 0;
 
 function initInvoices() {
   console.log("Página completamente cargada");
@@ -46,7 +47,7 @@ function initInvoices() {
   updateInvoiceTable();
 }
 
-function invoiceListUpdate() {
+function downloadInvoiceList() {
   const invoiceListJSON = JSON.stringify(invoiceList);
   localStorage.setItem(
     "tareaTE-facturacion-invoiceList-rmaidana",
@@ -151,6 +152,7 @@ function showProducts() {
 }
 
 function createNewInvoice() {
+  verifyAuthUser();
   let id = invoiceList.length;
   id++;
   const selectClient = document.getElementById("selectClient");
@@ -164,6 +166,11 @@ function createNewInvoice() {
 
   if (selectSeller.value === "null") {
     alert("Seleccione un Vendedor");
+    return;
+  }
+
+  if (invoiceDetails.length === 0) {
+    alert("No hay detalles cargados");
     return;
   }
 
@@ -181,7 +188,7 @@ function createNewInvoice() {
   );
 
   invoiceList.push(tempInvoice);
-  invoiceListUpdate();
+  downloadInvoiceList();
   updateInvoiceTable();
   window.location.reload();
 }
@@ -201,15 +208,12 @@ function updateInvoiceTable() {
   buff.push("  </thead>");
   buff.push("  <tbody>");
 
-  for (let i = 0; i < invoiceList.length; i++) {
-    const tempInvoice = invoiceList[i];
+  invoiceList.map((tempInvoice) => {
     let total = 0;
 
-    for (let j = 0; j < tempInvoice.detail.length; j++) {
-      total =
-        total +
-        tempInvoice.detail[j].product.price * tempInvoice.detail[j].amount;
-    }
+    tempInvoice.detail.forEach((detail) => {
+      total += detail.product.price * detail.amount;
+    });
 
     buff.push("<tr>");
     buff.push("<td>" + tempInvoice.id + "</td>");
@@ -219,7 +223,7 @@ function updateInvoiceTable() {
     buff.push("<td>" + total + "</td>");
 
     buff.push("</tr>");
-  }
+  });
 
   buff.push("</tbody>");
   buff.push("</table>");
@@ -228,16 +232,20 @@ function updateInvoiceTable() {
 }
 
 function addInvoiceDetail() {
+  verifyAuthUser();
   const productSelect = document.getElementById("selectProduct");
   const productAmount = document.getElementById("productAmount");
 
   invoiceDetails.push(
     new Detail(getProduct(parseInt(productSelect.value)), productAmount.value)
   );
-  updateInvoiceDetails();
+  updateDetailsTable();
+
+  productSelect.value = null;
+  productAmount.value = "";
 }
 
-function updateInvoiceDetails() {
+function updateDetailsTable() {
   const detailsTable = document.getElementById("invoiceDetails");
 
   const buff = [];
@@ -249,26 +257,80 @@ function updateInvoiceDetails() {
   buff.push("      <th>Cantidad</th>");
   buff.push("      <th>Precio</th>");
   buff.push("      <th>Subtotal</th>");
+  buff.push("      <th>Modificar</th>");
   buff.push("    </tr>");
   buff.push("  </thead>");
   buff.push("  <tbody>");
 
-  for (let i = 0; i < invoiceDetails.length; i++) {
-    const tempDetail = invoiceDetails[i];
-    let index = i;
-
+  invoiceDetails.forEach((tempDetail, index) => {
     buff.push("<tr>");
     buff.push("<td>" + ++index + "</td>");
     buff.push("<td>" + tempDetail.product.name + "</td>");
     buff.push("<td>" + tempDetail.amount + "</td>");
     buff.push("<td>" + tempDetail.product.price + "</td>");
     buff.push("<td>" + tempDetail.amount * tempDetail.product.price + "</td>");
+    buff.push(
+      "<td class='text-center'>" +
+        "<img src='/img/pencil.webp' alt='Modificar' width='20' height='20' onclick='modifyDetail(" +
+        index +
+        ")' style='cursor: pointer; margin-right: 5px;'></img>" +
+        "<img src='/img/trash-can.webp' alt='Borrar' width='20' height='20' onclick='deleteDetail(" +
+        index +
+        ")' style='cursor: pointer; margin-left: 5px;'></img>" +
+        "</td>"
+    );
 
     buff.push("</tr>");
-  }
+  });
 
   buff.push("</tbody>");
   buff.push("</table>");
 
   detailsTable.innerHTML = buff.join("\n");
+}
+
+function toggleInvoiceButtons() {
+  const newInvoiceButtons = document.getElementById("newInvoiceButtons");
+  newInvoiceButtons.hidden = !newInvoiceButtons.hidden;
+
+  const editInvoiceButtons = document.getElementById("editInvoiceButtons");
+  editInvoiceButtons.hidden = !editInvoiceButtons.hidden;
+}
+
+function deleteDetail(id) {
+  invoiceDetails.splice(id - 1, 1);
+  updateDetailsTable();
+}
+
+function modifyDetail(id) {
+  verifyAuthUser();
+  //Que esta funcion cargue los datos del invoiceDetail en los campos del modal y que cambie el boton de "Agregar" por "Modificar" utilizando la funcion toggleInvoiceButtons()
+  toggleInvoiceButtons();
+  const productSelect = document.getElementById("selectProduct");
+  const productAmount = document.getElementById("productAmount");
+  productSelect.value = invoiceDetails[id - 1].product.id;
+  productAmount.value = invoiceDetails[id - 1].amount;
+  detailBeingModified = id;
+}
+
+function saveModifiedDetail() {
+  verifyAuthUser();
+  const id = detailBeingModified;
+  const productSelect = document.getElementById("selectProduct");
+  const productAmount = document.getElementById("productAmount");
+
+  invoiceDetails[id - 1].product = getProduct(parseInt(productSelect.value));
+  invoiceDetails[id - 1].amount = productAmount.value;
+
+  productSelect.value = null;
+  productAmount.value = "";
+
+  toggleInvoiceButtons();
+  updateDetailsTable();
+}
+
+function cancelModifiedDetail() {
+  toggleInvoiceButtons();
+  productSelect.value = null;
+  productAmount.value = "";
 }

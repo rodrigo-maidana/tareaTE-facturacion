@@ -1,6 +1,6 @@
 let clientList = [];
 let clientStatusModify = false;
-let clientBeeingModified = 0;
+let clientBeingModified = 0;
 
 function initClients() {
   console.log("Página completamente cargada");
@@ -23,7 +23,7 @@ function initClients() {
     verifyAuthUser();
   };
 
-  updateClientList();
+  updateClientTable();
 }
 
 function Client(id, name, ruc, address, phone) {
@@ -62,7 +62,7 @@ function getClientByRuc(ruc) {
   return null;
 }
 
-function clientListUpdate() {
+function downloadClientsList() {
   const clientListJSON = JSON.stringify(clientList);
   localStorage.setItem(
     "tareaTE-facturacion-clientList-rmaidana",
@@ -70,7 +70,7 @@ function clientListUpdate() {
   );
 }
 
-function updateClientList() {
+function updateClientTable() {
   const clientTable = document.querySelector(".clientsTable");
   if (clientList.length === 0 || clientList.every((client) => !client.active)) {
     clientTable.innerHTML = "No hay clientes cargados";
@@ -170,8 +170,8 @@ function createNewClient() {
   address.value = "";
   phone.value = "";
   alert("Cliente guardado correctamente!");
-  clientListUpdate();
-  updateClientList();
+  downloadClientsList();
+  updateClientTable();
 }
 
 function modifyClient(id) {
@@ -193,7 +193,7 @@ function modifyClient(id) {
   address.value = tempClient.address;
   phone.value = tempClient.phone;
 
-  clientBeeingModified = tempClient.id;
+  clientBeingModified = tempClient.id;
 }
 
 function modifyClientData() {
@@ -202,7 +202,7 @@ function modifyClientData() {
   const address = document.getElementById("clientAddress");
   const phone = document.getElementById("clientPhone");
 
-  const tempClient = getClient(clientBeeingModified);
+  const tempClient = getClient(clientBeingModified);
 
   if (!name.value) {
     name.classList.add("is-invalid");
@@ -235,9 +235,9 @@ function modifyClientData() {
   clientList[tempClient.id - 1] = tempClient;
 
   alert("Cliente modificado correctamente!");
-  clientListUpdate();
-  updateClientList();
-  clientBeeingModified = 0;
+  downloadClientsList();
+  updateClientTable();
+  clientBeingModified = 0;
   window.location.reload();
 }
 
@@ -256,15 +256,15 @@ function cancelModifyClientData() {
   ruc.value = "";
   address.value = "";
   phone.value = "";
-  clientBeeingModified = 0;
+  clientBeingModified = 0;
 }
 
 function deleteClient(id) {
   const clientIndex = clientList.findIndex((client) => client.id === id);
   clientList[clientIndex].active = false;
 
-  clientListUpdate();
-  updateClientList();
+  downloadClientsList();
+  updateClientTable();
   window.location.reload();
 }
 

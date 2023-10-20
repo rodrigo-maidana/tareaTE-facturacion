@@ -79,12 +79,23 @@
             </div>
             <div>
               <br />
-              <div>
+              <div id="newInvoiceButtons">
                 <button class="btn btn-primary" onclick="addInvoiceDetail()">
                   Agregar Detalle
                 </button>
                 <button class="btn btn-primary" onclick="createNewInvoice()">
                   Generar factura
+                </button>
+              </div>
+              <div id="editInvoiceButtons" hidden>
+                <button class="btn btn-primary" onclick="saveModifiedDetail()">
+                  Guardar cambios
+                </button>
+                <button
+                  class="btn btn-primary"
+                  onclick="cancelModifiedDetail()"
+                >
+                  Cancelar
                 </button>
               </div>
               <br />

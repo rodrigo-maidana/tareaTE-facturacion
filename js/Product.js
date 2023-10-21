@@ -273,12 +273,18 @@ function cancelModifyProductData() {
 }
 
 function deleteProduct(id) {
-  const productIndex = productList.findIndex((product) => product.id === id);
-  productList[productIndex].active = false;
+  const confirmed = confirm(
+    "¿Estás seguro de que quieres borrar este producto?"
+  );
 
-  productListUpdate();
-  updateProductList();
-  window.location.reload();
+  if (confirmed) {
+    const productIndex = productList.findIndex((product) => product.id === id);
+    productList[productIndex].active = false;
+
+    productListUpdate();
+    updateProductList();
+    window.location.reload();
+  }
 }
 
 function toggleButtons() {

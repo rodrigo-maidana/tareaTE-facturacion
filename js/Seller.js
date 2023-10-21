@@ -288,12 +288,18 @@ function cancelModifySellerData() {
 }
 
 function deleteSeller(id) {
-  const sellerIndex = sellerList.findIndex((seller) => seller.id === id);
-  sellerList[sellerIndex].active = false;
+  const confirmed = confirm(
+    "¿Estás seguro de que quieres borrar a este vendedor?"
+  );
 
-  sellerListUpdate();
-  updateSellerList();
-  window.location.reload();
+  if (confirmed) {
+    const sellerIndex = sellerList.findIndex((seller) => seller.id === id);
+    sellerList[sellerIndex].active = false;
+
+    sellerListUpdate();
+    updateSellerList();
+    window.location.reload();
+  }
 }
 
 function toggleButtons() {

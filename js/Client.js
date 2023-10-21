@@ -260,12 +260,18 @@ function cancelModifyClientData() {
 }
 
 function deleteClient(id) {
-  const clientIndex = clientList.findIndex((client) => client.id === id);
-  clientList[clientIndex].active = false;
+  const confirmed = confirm(
+    "¿Estás seguro de que quieres borrar a este cliente?"
+  );
 
-  downloadClientsList();
-  updateClientTable();
-  window.location.reload();
+  if (confirmed) {
+    const clientIndex = clientList.findIndex((client) => client.id === id);
+    clientList[clientIndex].active = false;
+
+    downloadClientsList();
+    updateClientTable();
+    window.location.reload();
+  }
 }
 
 function toggleButtons() {

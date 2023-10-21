@@ -99,7 +99,7 @@ function initInvoices() {
   updateInvoiceTable();
 }
 
-function downloadInvoiceList() {
+function uploadInvoiceList() {
   const invoiceListJSON = JSON.stringify(invoiceList);
   localStorage.setItem(
     "tareaTE-facturacion-invoiceList-rmaidana",
@@ -242,7 +242,7 @@ function createNewInvoice() {
   const tempInvoice = new Invoice(
     id,
     client,
-    formatDate(new Date()),
+    new Date(),
     1000 + id,
     invoiceDetails,
     selectCondition.value,
@@ -250,7 +250,7 @@ function createNewInvoice() {
   );
 
   invoiceList.push(tempInvoice);
-  downloadInvoiceList();
+  uploadInvoiceList();
   updateInvoiceTable();
   window.location.reload();
 }
@@ -266,7 +266,7 @@ function updateInvoiceTable() {
   buff.push("      <th>Vendedor</th>");
   buff.push("      <th>Condicion</th>");
   buff.push("      <th>Total</th>");
-  buff.push("      <th>Ver detalles</th>");
+  buff.push("      <th>Acciones</th>");
   buff.push("    </tr>");
   buff.push("  </thead>");
   buff.push("  <tbody>");
@@ -278,21 +278,26 @@ function updateInvoiceTable() {
       total += detail.product.price * detail.amount;
     });
 
-    buff.push("<tr>");
-    buff.push("<td>" + tempInvoice.id + "</td>");
-    buff.push("<td>" + tempInvoice.client.name + "</td>");
-    buff.push("<td>" + tempInvoice.seller.name + "</td>");
-    buff.push("<td>" + tempInvoice.condition + "</td>");
-    buff.push("<td>" + formatNumber(total) + "</td>");
-    buff.push(
-      "<td class='text-center'>" +
-        "<img src='/img/view.webp' alt='Modificar' width='20' height='20' onclick='showInvoice(" +
-        tempInvoice.id +
-        ")' style='cursor: pointer;'>" +
-        "</td>"
-    );
+    if (tempInvoice.active == true) {
+      buff.push("<tr>");
+      buff.push("<td>" + tempInvoice.id + "</td>");
+      buff.push("<td>" + tempInvoice.client.name + "</td>");
+      buff.push("<td>" + tempInvoice.seller.name + "</td>");
+      buff.push("<td>" + tempInvoice.condition + "</td>");
+      buff.push("<td>" + formatNumber(total) + "</td>");
+      buff.push(
+        "<td class='text-center'>" +
+          "<img src='/img/view.webp' alt='Modificar' width='20' height='20' onclick='showInvoice(" +
+          tempInvoice.id +
+          ")' style='cursor: pointer; margin-right: 5px;'></img>" +
+          "<img src='/img/trash-can.webp' alt='Borrar' width='20' height='20' onclick='deleteInvoice(" +
+          tempInvoice.id +
+          ")' style='cursor: pointer; margin-left: 5px;'></img>" +
+          "</td>"
+      );
 
-    buff.push("</tr>");
+      buff.push("</tr>");
+    }
   });
 
   buff.push("</tbody>");
@@ -426,6 +431,8 @@ function printInvoice() {
   const invoiceDetails = invoice.detail;
   let totalPrice = 0;
 
+  printInvoiceInfo(invoice);
+
   const detailsTableBody = document.getElementById("detailsTableBody");
   invoiceDetails.forEach((detail) => {
     const row = document.createElement("tr");
@@ -466,6 +473,34 @@ function printInvoice() {
   finalRow.appendChild(totalUnitPrice);
   finalRow.appendChild(totalSubtTotal);
   detailsTableBody.appendChild(finalRow);
+}
+
+function printInvoiceInfo(invoice) {
+  // Datos del cliente
+  document.getElementById("clientDocument").textContent = invoice.client.ruc;
+  document.getElementById("clientName").textContent = invoice.client.name;
+  document.getElementById("clientAddress").textContent = invoice.client.address;
+  document.getElementById("clientPhone").textContent = invoice.client.phone;
+
+  // Datos de la factura
+  document.getElementById("invoiceDate").textContent = formatDate(invoice.date);
+  document.getElementById("invoiceNumber").textContent = invoice.id;
+}
+
+function deleteInvoice(id) {
+  verifyAuthUser();
+  const confirmed = confirm(
+    "¿Estás seguro de que quieres borrar a este vendedor?"
+  );
+
+  if (confirmed) {
+    const invoiceIndex = invoiceList.findIndex((invoice) => invoice.id === id);
+    invoiceList[invoiceIndex].active = false;
+
+    uploadInvoiceList();
+    updateInvoiceTable();
+    window.location.reload();
+  }
 }
 
 function formatNumber(number) {

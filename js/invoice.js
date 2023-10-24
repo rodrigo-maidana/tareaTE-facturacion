@@ -139,6 +139,14 @@ function Detail(product, amount) {
   this.amount = amount;
 }
 
+function getInvoiceTotal(invoice) {
+  let total = 0;
+  invoice.detail.forEach((detail) => {
+    total += detail.product.price * detail.amount;
+  });
+  return total;
+}
+
 function showClientsAndSellers() {
   const storedSellers = localStorage.getItem(
     "tareaTE-facturacion-sellerList-rmaidana"
@@ -313,6 +321,16 @@ function addInvoiceDetail() {
   if (verifyAuthUser()) {
     const productSelect = document.getElementById("selectProduct");
     const productAmount = document.getElementById("productAmount");
+
+    if (productSelect.value === "null") {
+      alert("Seleccione un Producto");
+      return;
+    }
+
+    if (productAmount.value === "") {
+      alert("Ingrese una cantidad");
+      return;
+    }
 
     invoiceDetails.push(
       new Detail(getProduct(parseInt(productSelect.value)), productAmount.value)

@@ -3,22 +3,20 @@ let productStatusModify = false;
 let productBeeingModified = 0;
 
 function initProducts() {
-  console.log("Página completamente cargada");
+  if (verifyAuthUser()) {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay productos almacenados en localStorage.
-  const storedProducts = localStorage.getItem(
-    "tareaTE-facturacion-productList-rmaidana"
-  );
-  if (storedProducts) {
-    productList = JSON.parse(storedProducts);
+    // Verifica si hay productos almacenados en localStorage.
+    const storedProducts = localStorage.getItem(
+      "tareaTE-facturacion-productList-rmaidana"
+    );
+    if (storedProducts) {
+      productList = JSON.parse(storedProducts);
+    }
+    updateProductList();
+  } else {
+    window.location.href = "/";
   }
-
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
-
-  updateProductList();
 }
 
 function Product(id, name, code, description, price) {
@@ -121,86 +119,91 @@ function updateProductList() {
 }
 
 function createNewProduct() {
-  verifyAuthUser();
-  let id = productList.length;
-  id++;
-  const code = document.getElementById("productCode");
-  const name = document.getElementById("productName");
-  const description = document.getElementById("productDescription");
-  const price = document.getElementById("productPrice");
+  if (verifyAuthUser()) {
+    let id = productList.length;
+    id++;
+    const code = document.getElementById("productCode");
+    const name = document.getElementById("productName");
+    const description = document.getElementById("productDescription");
+    const price = document.getElementById("productPrice");
 
-  if (!name.value) {
-    name.classList.add("is-invalid");
-    return;
-  } else {
-    name.classList.remove("is-invalid");
-  }
+    if (!name.value) {
+      name.classList.add("is-invalid");
+      return;
+    } else {
+      name.classList.remove("is-invalid");
+    }
 
-  if (!code.value) {
-    code.classList.add("is-invalid");
-    return;
-  } else {
-    code.classList.remove("is-invalid");
-  }
+    if (!code.value) {
+      code.classList.add("is-invalid");
+      return;
+    } else {
+      code.classList.remove("is-invalid");
+    }
 
-  if (!price.value) {
-    price.classList.add("is-invalid");
-    return;
-  } else {
-    price.classList.remove("is-invalid");
-  }
+    if (!price.value) {
+      price.classList.add("is-invalid");
+      return;
+    } else {
+      price.classList.remove("is-invalid");
+    }
 
-  const isCodeTaken = productList.some(
-    (product) => product.code === code.value && product.active === true
-  );
-  if (isCodeTaken) {
-    code.classList.add("is-invalid");
+    const isCodeTaken = productList.some(
+      (product) => product.code === code.value && product.active === true
+    );
+    if (isCodeTaken) {
+      code.classList.add("is-invalid");
+      code.value = "";
+      alert("Ya existe un producte con ese code");
+      return;
+    }
+
+    // Crea un nuevo objeto product con los valores obtenidos del HTML
+    const newProduct = new Product(
+      id,
+      name.value,
+      code.value,
+      description.value,
+      parseFloat(price.value)
+    );
+
+    productList.push(newProduct);
+
     code.value = "";
-    alert("Ya existe un producte con ese code");
-    return;
+    name.value = "";
+    description.value = "";
+    price.value = "";
+    alert("Producto guardado correctamente!");
+    productListUpdate();
+    updateProductList();
+  } else {
+    window.location.href = "/";
   }
-
-  // Crea un nuevo objeto product con los valores obtenidos del HTML
-  const newProduct = new Product(
-    id,
-    name.value,
-    code.value,
-    description.value,
-    parseFloat(price.value)
-  );
-
-  productList.push(newProduct);
-
-  code.value = "";
-  name.value = "";
-  description.value = "";
-  price.value = "";
-  alert("Producto guardado correctamente!");
-  productListUpdate();
-  updateProductList();
 }
 
 function modifyProduct(id) {
-  //modificar interfaz
-  if (productStatusModify === false) {
-    toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    if (productStatusModify === false) {
+      toggleButtons();
+    }
+
+    const tempProduct = getProduct(id);
+
+    const code = document.getElementById("productCode");
+    const name = document.getElementById("productName");
+    const description = document.getElementById("productDescription");
+    const price = document.getElementById("productPrice");
+
+    code.value = tempProduct.code;
+    name.value = tempProduct.name;
+    description.value = tempProduct.description;
+    price.value = tempProduct.price;
+
+    productBeeingModified = id;
+  } else {
+    window.location.href = "/";
   }
-
-  verifyAuthUser();
-
-  const tempProduct = getProduct(id);
-
-  const code = document.getElementById("productCode");
-  const name = document.getElementById("productName");
-  const description = document.getElementById("productDescription");
-  const price = document.getElementById("productPrice");
-
-  code.value = tempProduct.code;
-  name.value = tempProduct.name;
-  description.value = tempProduct.description;
-  price.value = tempProduct.price;
-
-  productBeeingModified = id;
 }
 
 function modifyProductData() {
@@ -256,34 +259,44 @@ function modifyProductData() {
 }
 
 function cancelModifyProductData() {
-  //modificar interfaz
-  toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    toggleButtons();
 
-  verifyAuthUser();
+    verifyAuthUser();
 
-  const name = document.getElementById("productName");
-  const code = document.getElementById("productCode");
-  const description = document.getElementById("productDescription");
-  const price = document.getElementById("productPrice");
+    const name = document.getElementById("productName");
+    const code = document.getElementById("productCode");
+    const description = document.getElementById("productDescription");
+    const price = document.getElementById("productPrice");
 
-  name.value = "";
-  code.value = "";
-  description.value = "";
-  price.value = "";
+    name.value = "";
+    code.value = "";
+    description.value = "";
+    price.value = "";
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function deleteProduct(id) {
-  const confirmed = confirm(
-    "¿Estás seguro de que quieres borrar este producto?"
-  );
+  if (verifyAuthUser()) {
+    const confirmed = confirm(
+      "¿Estás seguro de que quieres borrar este producto?"
+    );
 
-  if (confirmed) {
-    const productIndex = productList.findIndex((product) => product.id === id);
-    productList[productIndex].active = false;
+    if (confirmed) {
+      const productIndex = productList.findIndex(
+        (product) => product.id === id
+      );
+      productList[productIndex].active = false;
 
-    productListUpdate();
-    updateProductList();
-    window.location.reload();
+      productListUpdate();
+      updateProductList();
+      window.location.reload();
+    }
+  } else {
+    window.location.href = "/";
   }
 }
 

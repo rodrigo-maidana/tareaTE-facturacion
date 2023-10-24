@@ -3,28 +3,27 @@ let sellerStatusModify = false;
 let sellerBeingModified = 0;
 
 function initSellers() {
-  console.log("Página completamente cargada");
+  if (verifyAuthUser()) {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
-  if (storedUsers) {
-    usersList = JSON.parse(storedUsers);
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers);
+    }
+
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedSellers = localStorage.getItem(
+      "tareaTE-facturacion-sellerList-rmaidana"
+    );
+    if (storedSellers) {
+      sellerList = JSON.parse(storedSellers);
+    }
+
+    updateSellerList();
+  } else {
+    window.location.href = "/";
   }
-
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedSellers = localStorage.getItem(
-    "tareaTE-facturacion-sellerList-rmaidana"
-  );
-  if (storedSellers) {
-    sellerList = JSON.parse(storedSellers);
-  }
-
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
-
-  updateSellerList();
 }
 
 function Seller(id, name, ruc, address, phone, commission) {
@@ -127,90 +126,95 @@ function updateSellerList() {
 }
 
 function createNewSeller() {
-  verifyAuthUser();
-  let id = sellerList.length;
-  id++;
-  const ruc = document.getElementById("sellerRuc");
-  const name = document.getElementById("sellerName");
-  const address = document.getElementById("sellerAddress");
-  const phone = document.getElementById("sellerPhone");
-  const commission = document.getElementById("sellerCommission");
+  if (verifyAuthUser()) {
+    let id = sellerList.length;
+    id++;
+    const ruc = document.getElementById("sellerRuc");
+    const name = document.getElementById("sellerName");
+    const address = document.getElementById("sellerAddress");
+    const phone = document.getElementById("sellerPhone");
+    const commission = document.getElementById("sellerCommission");
 
-  if (!name.value) {
-    name.classList.add("is-invalid");
-    return;
-  } else {
-    name.classList.remove("is-invalid");
-  }
+    if (!name.value) {
+      name.classList.add("is-invalid");
+      return;
+    } else {
+      name.classList.remove("is-invalid");
+    }
 
-  if (!ruc.value) {
-    ruc.classList.add("is-invalid");
-    return;
-  } else {
-    ruc.classList.remove("is-invalid");
-  }
+    if (!ruc.value) {
+      ruc.classList.add("is-invalid");
+      return;
+    } else {
+      ruc.classList.remove("is-invalid");
+    }
 
-  const isRucTaken = sellerList.some(
-    (seller) => seller.ruc === ruc.value && seller.active === true
-  );
-  if (isRucTaken) {
-    ruc.classList.add("is-invalid");
+    const isRucTaken = sellerList.some(
+      (seller) => seller.ruc === ruc.value && seller.active === true
+    );
+    if (isRucTaken) {
+      ruc.classList.add("is-invalid");
+      ruc.value = "";
+      alert("Ya existe un vendedor con ese RUC");
+      return;
+    }
+
+    if (commission.value < 0 || commission.value > 100 || !commission.value) {
+      commission.classList.add("is-invalid");
+      return;
+    } else {
+      commission.classList.remove("is-invalid");
+    }
+
+    // Crea un nuevo objeto seller con los valores obtenidos del HTML
+    const newSeller = new Seller(
+      id,
+      name.value,
+      ruc.value,
+      address.value,
+      phone.value,
+      commission.value
+    );
+
+    sellerList.push(newSeller);
+
     ruc.value = "";
-    alert("Ya existe un vendedor con ese RUC");
-    return;
-  }
-
-  if (commission.value < 0 || commission.value > 100 || !commission.value) {
-    commission.classList.add("is-invalid");
-    return;
+    name.value = "";
+    address.value = "";
+    phone.value = "";
+    commission.value = "";
+    alert("Vendedor guardado correctamente!");
+    sellerListUpdate();
+    updateSellerList();
   } else {
-    commission.classList.remove("is-invalid");
+    window.location.href = "/";
   }
-
-  // Crea un nuevo objeto seller con los valores obtenidos del HTML
-  const newSeller = new Seller(
-    id,
-    name.value,
-    ruc.value,
-    address.value,
-    phone.value,
-    commission.value
-  );
-
-  sellerList.push(newSeller);
-
-  ruc.value = "";
-  name.value = "";
-  address.value = "";
-  phone.value = "";
-  commission.value = "";
-  alert("Vendedor guardado correctamente!");
-  sellerListUpdate();
-  updateSellerList();
 }
 
 function modifySeller(id) {
-  //modificar interfaz
-  if (sellerStatusModify === false) {
-    toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    if (sellerStatusModify === false) {
+      toggleButtons();
+    }
+
+    const ruc = document.getElementById("sellerRuc");
+    const name = document.getElementById("sellerName");
+    const address = document.getElementById("sellerAddress");
+    const phone = document.getElementById("sellerPhone");
+    const commission = document.getElementById("sellerCommission");
+
+    const tempSeller = getSeller(id);
+    ruc.value = tempSeller.ruc;
+    name.value = tempSeller.name;
+    address.value = tempSeller.address;
+    phone.value = tempSeller.phone;
+    commission.value = tempSeller.commission;
+
+    sellerBeingModified = tempSeller.id;
+  } else {
+    window.location.href = "/";
   }
-
-  verifyAuthUser();
-
-  const ruc = document.getElementById("sellerRuc");
-  const name = document.getElementById("sellerName");
-  const address = document.getElementById("sellerAddress");
-  const phone = document.getElementById("sellerPhone");
-  const commission = document.getElementById("sellerCommission");
-
-  const tempSeller = getSeller(id);
-  ruc.value = tempSeller.ruc;
-  name.value = tempSeller.name;
-  address.value = tempSeller.address;
-  phone.value = tempSeller.phone;
-  commission.value = tempSeller.commission;
-
-  sellerBeingModified = tempSeller.id;
 }
 
 function modifySellerData() {
@@ -268,37 +272,42 @@ function modifySellerData() {
 }
 
 function cancelModifySellerData() {
-  //modificar interfaz
-  toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    toggleButtons();
+    const name = document.getElementById("sellerName");
+    const ruc = document.getElementById("sellerRuc");
+    const address = document.getElementById("sellerAddress");
+    const phone = document.getElementById("sellerPhone");
+    const commission = document.getElementById("sellerCommission");
 
-  verifyAuthUser();
-
-  const name = document.getElementById("sellerName");
-  const ruc = document.getElementById("sellerRuc");
-  const address = document.getElementById("sellerAddress");
-  const phone = document.getElementById("sellerPhone");
-  const commission = document.getElementById("sellerCommission");
-
-  name.value = "";
-  ruc.value = "";
-  address.value = "";
-  phone.value = "";
-  commission.value = "";
-  sellerBeingModified = 0;
+    name.value = "";
+    ruc.value = "";
+    address.value = "";
+    phone.value = "";
+    commission.value = "";
+    sellerBeingModified = 0;
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function deleteSeller(id) {
-  const confirmed = confirm(
-    "¿Estás seguro de que quieres borrar a este vendedor?"
-  );
+  if (verifyAuthUser()) {
+    const confirmed = confirm(
+      "¿Estás seguro de que quieres borrar a este vendedor?"
+    );
 
-  if (confirmed) {
-    const sellerIndex = sellerList.findIndex((seller) => seller.id === id);
-    sellerList[sellerIndex].active = false;
+    if (confirmed) {
+      const sellerIndex = sellerList.findIndex((seller) => seller.id === id);
+      sellerList[sellerIndex].active = false;
 
-    sellerListUpdate();
-    updateSellerList();
-    window.location.reload();
+      sellerListUpdate();
+      updateSellerList();
+      window.location.reload();
+    }
+  } else {
+    window.location.href = "/";
   }
 }
 

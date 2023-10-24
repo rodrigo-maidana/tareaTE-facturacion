@@ -3,27 +3,26 @@ let clientStatusModify = false;
 let clientBeingModified = 0;
 
 function initClients() {
-  console.log("Página completamente cargada");
+  if (verifyAuthUser()) {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
-  if (storedUsers) {
-    usersList = JSON.parse(storedUsers);
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers);
+    }
+
+    const storedClients = localStorage.getItem(
+      "tareaTE-facturacion-clientList-rmaidana"
+    );
+    if (storedClients) {
+      clientList = JSON.parse(storedClients);
+    }
+
+    updateClientTable();
+  } else {
+    window.location.href = "/";
   }
-
-  const storedClients = localStorage.getItem(
-    "tareaTE-facturacion-clientList-rmaidana"
-  );
-  if (storedClients) {
-    clientList = JSON.parse(storedClients);
-  }
-
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
-
-  updateClientTable();
 }
 
 function Client(id, name, ruc, address, phone) {
@@ -123,77 +122,81 @@ function updateClientTable() {
 }
 
 function createNewClient() {
-  verifyAuthUser();
-  let id = clientList.length;
-  id++;
-  const ruc = document.getElementById("clientRuc");
-  const name = document.getElementById("clientName");
-  const address = document.getElementById("clientAddress");
-  const phone = document.getElementById("clientPhone");
-  if (!name.value) {
-    name.classList.add("is-invalid");
-    return;
-  } else {
-    name.classList.remove("is-invalid");
-  }
+  if (verifyAuthUser()) {
+    let id = clientList.length;
+    id++;
+    const ruc = document.getElementById("clientRuc");
+    const name = document.getElementById("clientName");
+    const address = document.getElementById("clientAddress");
+    const phone = document.getElementById("clientPhone");
+    if (!name.value) {
+      name.classList.add("is-invalid");
+      return;
+    } else {
+      name.classList.remove("is-invalid");
+    }
 
-  if (!ruc.value) {
-    ruc.classList.add("is-invalid");
-    return;
-  } else {
-    ruc.classList.remove("is-invalid");
-  }
+    if (!ruc.value) {
+      ruc.classList.add("is-invalid");
+      return;
+    } else {
+      ruc.classList.remove("is-invalid");
+    }
 
-  const isRucTaken = clientList.some(
-    (client) => client.ruc === ruc.value && client.active === true
-  );
-  if (isRucTaken) {
-    ruc.classList.add("is-invalid");
+    const isRucTaken = clientList.some(
+      (client) => client.ruc === ruc.value && client.active === true
+    );
+    if (isRucTaken) {
+      ruc.classList.add("is-invalid");
+      ruc.value = "";
+      alert("Ya existe un cliente con ese RUC");
+      return;
+    }
+
+    // Crea un nuevo objeto client con los valores obtenidos del HTML
+    const newclient = new Client(
+      id,
+      name.value,
+      ruc.value,
+      address.value,
+      phone.value
+    );
+
+    clientList.push(newclient);
+
     ruc.value = "";
-    alert("Ya existe un cliente con ese RUC");
-    return;
+    name.value = "";
+    address.value = "";
+    phone.value = "";
+    alert("Cliente guardado correctamente!");
+    downloadClientsList();
+    updateClientTable();
+  } else {
+    window.location.href = "/";
   }
-
-  // Crea un nuevo objeto client con los valores obtenidos del HTML
-  const newclient = new Client(
-    id,
-    name.value,
-    ruc.value,
-    address.value,
-    phone.value
-  );
-
-  clientList.push(newclient);
-
-  ruc.value = "";
-  name.value = "";
-  address.value = "";
-  phone.value = "";
-  alert("Cliente guardado correctamente!");
-  downloadClientsList();
-  updateClientTable();
 }
 
 function modifyClient(id) {
-  //modificar interfaz
-  if (clientStatusModify === false) {
-    toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    if (clientStatusModify === false) {
+      toggleButtons();
+    }
+    const ruc = document.getElementById("clientRuc");
+    const name = document.getElementById("clientName");
+    const address = document.getElementById("clientAddress");
+    const phone = document.getElementById("clientPhone");
+
+    const tempClient = getClient(id);
+    ruc.value = tempClient.ruc;
+    name.value = tempClient.name;
+    address.value = tempClient.address;
+    phone.value = tempClient.phone;
+
+    clientBeingModified = tempClient.id;
+  } else {
+    window.location.href = "/";
   }
-
-  verifyAuthUser();
-
-  const ruc = document.getElementById("clientRuc");
-  const name = document.getElementById("clientName");
-  const address = document.getElementById("clientAddress");
-  const phone = document.getElementById("clientPhone");
-
-  const tempClient = getClient(id);
-  ruc.value = tempClient.ruc;
-  name.value = tempClient.name;
-  address.value = tempClient.address;
-  phone.value = tempClient.phone;
-
-  clientBeingModified = tempClient.id;
 }
 
 function modifyClientData() {
@@ -242,35 +245,42 @@ function modifyClientData() {
 }
 
 function cancelModifyClientData() {
-  //modificar interfaz
-  toggleButtons();
+  if (verifyAuthUser()) {
+    //modificar interfaz
+    toggleButtons();
+    const name = document.getElementById("clientName");
+    const ruc = document.getElementById("clientRuc");
+    const address = document.getElementById("clientAddress");
+    const phone = document.getElementById("clientPhone");
 
-  verifyAuthUser();
-
-  const name = document.getElementById("clientName");
-  const ruc = document.getElementById("clientRuc");
-  const address = document.getElementById("clientAddress");
-  const phone = document.getElementById("clientPhone");
-
-  name.value = "";
-  ruc.value = "";
-  address.value = "";
-  phone.value = "";
-  clientBeingModified = 0;
+    name.value = "";
+    ruc.value = "";
+    address.value = "";
+    phone.value = "";
+    clientBeingModified = 0;
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function deleteClient(id) {
-  const confirmed = confirm(
-    "¿Estás seguro de que quieres borrar a este cliente?"
-  );
+  if (verifyAuthUser()) {
+    const confirmed = confirm(
+      "¿Estás seguro de que quieres borrar a este cliente?"
+    );
 
-  if (confirmed) {
-    const clientIndex = clientList.findIndex((client) => client.id === id);
-    clientList[clientIndex].active = false;
+    if (confirmed) {
+      const clientIndex = clientList.findIndex((client) => client.id === id);
+      clientList[clientIndex].active = false;
 
-    downloadClientsList();
-    updateClientTable();
-    window.location.reload();
+      downloadClientsList();
+      updateClientTable();
+      window.location.reload();
+    } else {
+      return;
+    }
+  } else {
+    window.location.href = "/";
   }
 }
 

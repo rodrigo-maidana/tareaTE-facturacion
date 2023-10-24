@@ -117,14 +117,10 @@ function verifyAuthUser() {
   const storedUser = sessionStorage.getItem(
     "tareaTE-facturacion-currentUser-rmaidana"
   );
+
   const currentUser = JSON.parse(storedUser);
 
-  if (currentUser !== null) {
-    console.log("Usuario autenticado:", currentUser.username);
-  } else {
-    console.log("Usuario no autenticado. Redirigiendo a la página de inicio.");
-    window.location.href = "/";
-  }
+  return currentUser !== null;
 }
 
 function getCurrentUser() {

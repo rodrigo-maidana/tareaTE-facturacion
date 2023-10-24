@@ -4,99 +4,99 @@ let detailBeingModified = 0;
 let showingInvoice = {};
 
 function initInvoiceDetails() {
-  console.log("Página completamente cargada");
+  if (verifyAuthUser()) {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
-  if (storedUsers) {
-    usersList = JSON.parse(storedUsers);
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers);
+    }
+
+    const storedClients = localStorage.getItem(
+      "tareaTE-facturacion-clientList-rmaidana"
+    );
+    if (storedClients) {
+      clientList = JSON.parse(storedClients);
+    }
+
+    const storedSellers = localStorage.getItem(
+      "tareaTE-facturacion-sellerList-rmaidana"
+    );
+    if (storedSellers) {
+      sellerList = JSON.parse(storedSellers);
+    }
+
+    const storedInvoices = localStorage.getItem(
+      "tareaTE-facturacion-invoiceList-rmaidana"
+    );
+    if (storedInvoices) {
+      invoiceList = JSON.parse(storedInvoices);
+    }
+
+    const storedProducts = localStorage.getItem(
+      "tareaTE-facturacion-productList-rmaidana"
+    );
+    if (storedProducts) {
+      productList = JSON.parse(storedProducts);
+    }
+
+    const storedShowingInvoice = sessionStorage.getItem(
+      "tareaTE-facturacion-showingInvoice-rmaidana"
+    );
+    if (storedShowingInvoice) {
+      showingInvoice = JSON.parse(storedShowingInvoice);
+    }
+
+    printInvoice();
+  } else {
+    window.location.href = "/";
   }
-
-  const storedClients = localStorage.getItem(
-    "tareaTE-facturacion-clientList-rmaidana"
-  );
-  if (storedClients) {
-    clientList = JSON.parse(storedClients);
-  }
-
-  const storedSellers = localStorage.getItem(
-    "tareaTE-facturacion-sellerList-rmaidana"
-  );
-  if (storedSellers) {
-    sellerList = JSON.parse(storedSellers);
-  }
-
-  const storedInvoices = localStorage.getItem(
-    "tareaTE-facturacion-invoiceList-rmaidana"
-  );
-  if (storedInvoices) {
-    invoiceList = JSON.parse(storedInvoices);
-  }
-
-  const storedProducts = localStorage.getItem(
-    "tareaTE-facturacion-productList-rmaidana"
-  );
-  if (storedProducts) {
-    productList = JSON.parse(storedProducts);
-  }
-
-  const storedShowingInvoice = sessionStorage.getItem(
-    "tareaTE-facturacion-showingInvoice-rmaidana"
-  );
-  if (storedShowingInvoice) {
-    showingInvoice = JSON.parse(storedShowingInvoice);
-  }
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
-
-  printInvoice();
 }
 
 function initInvoices() {
-  console.log("Página completamente cargada");
+  if (verifyAuthUser()) {
+    console.log("Página completamente cargada");
 
-  // Verifica si hay usuarios almacenados en localStorage.
-  const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
-  if (storedUsers) {
-    usersList = JSON.parse(storedUsers);
-  }
+    // Verifica si hay usuarios almacenados en localStorage.
+    const storedUsers = localStorage.getItem("tareaTE-facturacion-rmaidana");
+    if (storedUsers) {
+      usersList = JSON.parse(storedUsers);
+    }
 
-  const storedClients = localStorage.getItem(
-    "tareaTE-facturacion-clientList-rmaidana"
-  );
-  if (storedClients) {
-    clientList = JSON.parse(storedClients);
-  }
+    const storedClients = localStorage.getItem(
+      "tareaTE-facturacion-clientList-rmaidana"
+    );
+    if (storedClients) {
+      clientList = JSON.parse(storedClients);
+    }
 
-  const storedSellers = localStorage.getItem(
-    "tareaTE-facturacion-sellerList-rmaidana"
-  );
-  if (storedSellers) {
-    sellerList = JSON.parse(storedSellers);
-  }
+    const storedSellers = localStorage.getItem(
+      "tareaTE-facturacion-sellerList-rmaidana"
+    );
+    if (storedSellers) {
+      sellerList = JSON.parse(storedSellers);
+    }
 
-  const storedInvoices = localStorage.getItem(
-    "tareaTE-facturacion-invoiceList-rmaidana"
-  );
-  if (storedInvoices) {
-    invoiceList = JSON.parse(storedInvoices);
+    const storedInvoices = localStorage.getItem(
+      "tareaTE-facturacion-invoiceList-rmaidana"
+    );
+    if (storedInvoices) {
+      invoiceList = JSON.parse(storedInvoices);
+    }
+    // Verifica si hay productos almacenados en localStorage.
+    const storedProducts = localStorage.getItem(
+      "tareaTE-facturacion-productList-rmaidana"
+    );
+    if (storedProducts) {
+      productList = JSON.parse(storedProducts);
+    }
+    showClientsAndSellers();
+    showProducts();
+    updateInvoiceTable();
+  } else {
+    window.location.href = "/";
   }
-  // Verifica si hay productos almacenados en localStorage.
-  const storedProducts = localStorage.getItem(
-    "tareaTE-facturacion-productList-rmaidana"
-  );
-  if (storedProducts) {
-    productList = JSON.parse(storedProducts);
-  }
-  // Este código hará un refresh de la página después de que el usuario haga clic en el botón "Volver"
-  window.onpopstate = (event) => {
-    verifyAuthUser();
-  };
-  showClientsAndSellers();
-  showProducts();
-  updateInvoiceTable();
 }
 
 function uploadInvoiceList() {
@@ -214,45 +214,48 @@ function getInvoice(id) {
 }
 
 function createNewInvoice() {
-  verifyAuthUser();
-  let id = invoiceList.length;
-  id++;
-  const selectClient = document.getElementById("selectClient");
-  const selectSeller = document.getElementById("selectSeller");
-  const selectCondition = document.getElementById("selectCondition");
+  if (verifyAuthUser()) {
+    let id = invoiceList.length;
+    id++;
+    const selectClient = document.getElementById("selectClient");
+    const selectSeller = document.getElementById("selectSeller");
+    const selectCondition = document.getElementById("selectCondition");
 
-  if (selectClient.value === "null") {
-    alert("Seleccione un Cliente");
-    return;
+    if (selectClient.value === "null") {
+      alert("Seleccione un Cliente");
+      return;
+    }
+
+    if (selectSeller.value === "null") {
+      alert("Seleccione un Vendedor");
+      return;
+    }
+
+    if (invoiceDetails.length === 0) {
+      alert("No hay detalles cargados");
+      return;
+    }
+
+    const client = getClient(parseInt(selectClient.value));
+    const seller = getSeller(parseInt(selectSeller.value));
+
+    const tempInvoice = new Invoice(
+      id,
+      client,
+      new Date(),
+      1000 + id,
+      invoiceDetails,
+      selectCondition.value,
+      seller
+    );
+
+    invoiceList.push(tempInvoice);
+    uploadInvoiceList();
+    updateInvoiceTable();
+    window.location.reload();
+  } else {
+    window.location.href = "/";
   }
-
-  if (selectSeller.value === "null") {
-    alert("Seleccione un Vendedor");
-    return;
-  }
-
-  if (invoiceDetails.length === 0) {
-    alert("No hay detalles cargados");
-    return;
-  }
-
-  const client = getClient(parseInt(selectClient.value));
-  const seller = getSeller(parseInt(selectSeller.value));
-
-  const tempInvoice = new Invoice(
-    id,
-    client,
-    new Date(),
-    1000 + id,
-    invoiceDetails,
-    selectCondition.value,
-    seller
-  );
-
-  invoiceList.push(tempInvoice);
-  uploadInvoiceList();
-  updateInvoiceTable();
-  window.location.reload();
 }
 
 function updateInvoiceTable() {
@@ -307,17 +310,20 @@ function updateInvoiceTable() {
 }
 
 function addInvoiceDetail() {
-  verifyAuthUser();
-  const productSelect = document.getElementById("selectProduct");
-  const productAmount = document.getElementById("productAmount");
+  if (verifyAuthUser()) {
+    const productSelect = document.getElementById("selectProduct");
+    const productAmount = document.getElementById("productAmount");
 
-  invoiceDetails.push(
-    new Detail(getProduct(parseInt(productSelect.value)), productAmount.value)
-  );
-  updateDetailsTable();
+    invoiceDetails.push(
+      new Detail(getProduct(parseInt(productSelect.value)), productAmount.value)
+    );
+    updateDetailsTable();
 
-  productSelect.value = null;
-  productAmount.value = "";
+    productSelect.value = null;
+    productAmount.value = "";
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function updateDetailsTable() {
@@ -382,18 +388,20 @@ function deleteDetail(id) {
 }
 
 function modifyDetail(id) {
-  verifyAuthUser();
-  //Que esta funcion cargue los datos del invoiceDetail en los campos del modal y que cambie el boton de "Agregar" por "Modificar" utilizando la funcion toggleInvoiceButtons()
-  toggleInvoiceButtons();
-  const productSelect = document.getElementById("selectProduct");
-  const productAmount = document.getElementById("productAmount");
-  productSelect.value = invoiceDetails[id - 1].product.id;
-  productAmount.value = invoiceDetails[id - 1].amount;
-  detailBeingModified = id;
+  if (verifyAuthUser) {
+    //Que esta funcion cargue los datos del invoiceDetail en los campos del modal y que cambie el boton de "Agregar" por "Modificar" utilizando la funcion toggleInvoiceButtons()
+    toggleInvoiceButtons();
+    const productSelect = document.getElementById("selectProduct");
+    const productAmount = document.getElementById("productAmount");
+    productSelect.value = invoiceDetails[id - 1].product.id;
+    productAmount.value = invoiceDetails[id - 1].amount;
+    detailBeingModified = id;
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function saveModifiedDetail() {
-  verifyAuthUser();
   const id = detailBeingModified;
   const productSelect = document.getElementById("selectProduct");
   const productAmount = document.getElementById("productAmount");
@@ -409,21 +417,29 @@ function saveModifiedDetail() {
 }
 
 function cancelModifiedDetail() {
-  toggleInvoiceButtons();
-  productSelect.value = null;
-  productAmount.value = "";
+  if (verifyAuthUser) {
+    toggleInvoiceButtons();
+    productSelect.value = null;
+    productAmount.value = "";
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function showInvoice(id) {
-  showingInvoice = getInvoice(id);
-  console.log(showingInvoice);
-  const showingInvoiceJSON = JSON.stringify(showingInvoice);
-  sessionStorage.setItem(
-    "tareaTE-facturacion-showingInvoice-rmaidana",
-    showingInvoiceJSON
-  );
+  if (verifyAuthUser()) {
+    showingInvoice = getInvoice(id);
+    console.log(showingInvoice);
+    const showingInvoiceJSON = JSON.stringify(showingInvoice);
+    sessionStorage.setItem(
+      "tareaTE-facturacion-showingInvoice-rmaidana",
+      showingInvoiceJSON
+    );
 
-  window.location.href = "/html/invoiceDetails.html";
+    window.location.href = "/html/invoiceDetails.html";
+  } else {
+    window.location.href = "/";
+  }
 }
 
 function printInvoice() {
@@ -488,18 +504,23 @@ function printInvoiceInfo(invoice) {
 }
 
 function deleteInvoice(id) {
-  verifyAuthUser();
-  const confirmed = confirm(
-    "¿Estás seguro de que quieres borrar a este vendedor?"
-  );
+  if (verifyAuthUser()) {
+    const confirmed = confirm(
+      "¿Estás seguro de que quieres borrar a este vendedor?"
+    );
 
-  if (confirmed) {
-    const invoiceIndex = invoiceList.findIndex((invoice) => invoice.id === id);
-    invoiceList[invoiceIndex].active = false;
+    if (confirmed) {
+      const invoiceIndex = invoiceList.findIndex(
+        (invoice) => invoice.id === id
+      );
+      invoiceList[invoiceIndex].active = false;
 
-    uploadInvoiceList();
-    updateInvoiceTable();
-    window.location.reload();
+      uploadInvoiceList();
+      updateInvoiceTable();
+      window.location.reload();
+    }
+  } else {
+    window.location.href = "/";
   }
 }
 

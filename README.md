@@ -4,9 +4,9 @@ Este repositorio forma parte de la tarea de la clase Tecnologías Emergentes y e
 
 ## Uso
 
-Para utilizar este proyecto, te ofrecemos dos opciones:
+Para acceder al proyecto, recomiendo estas dos opciones:
 
-1. **Visual Studio Code (VS Code):** Abre el proyecto desde VS Code utilizando extensiones como Live Server u opciones similares.
+1. **Visual Studio Code (VS Code):** Abre el proyecto desde desde VS Code utilizando extensiones como Live Server u opciones similares en el archivo `index.html`.
 
 2. **Acceso en línea:** También puedes acceder a la aplicación en línea visitando [https://tarea-facturacion.rodrigomaidana.com/].
 

@@ -10,7 +10,7 @@ Para acceder al proyecto, recomiendo estas dos opciones:
 
 2. **Acceso en línea:** También puedes acceder a la aplicación en línea visitando [https://tarea-facturacion.rodrigomaidana.com/].
 
-Ten en cuenta que al abrir el proyecto directamente desde el archivo `index.html`, es posible que las ubicaciones de los archivos no coincidan correctamente. Por lo tanto, es recomendable utilizar una de las dos opciones mencionadas anteriormente para evitar problemas con las rutas de los archivos.
+Ten en cuenta que al abrir el proyecto directamente haciendo doble click en el archivo `index.html`, es posible que las ubicaciones de los archivos no coincidan correctamente. Por lo tanto, es recomendable utilizar una de las dos opciones mencionadas anteriormente para evitar problemas con las rutas de los archivos.
 
 **Una vez que accedas a la aplicación y te encuentres en la página de Login:**
 

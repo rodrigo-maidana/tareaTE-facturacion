@@ -1,58 +1,93 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sistema de Facturación</title>
-    <link rel="icon" type="image/png" href="/img/logo.png" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body onload="initLogin(); verifyAuthUser();">
-    <div class="container mt-2">
-      <header class="d-flex justify-content-between">
-        <div>
-          <a class="navbar-brand" href="/html/home.html">Home</a>
-          <a class="navbar-brand" href="/html/invoice.html">Facturas</a>
-          <a class="navbar-brand" href="/html/client.html">Clientes</a>
-          <a class="navbar-brand" href="/html/product.html">Productos</a>
-          <a class="navbar-brand" href="/html/reports.html">Reportes</a>
-          <a class="navbar-brand" href="/html/seller.html">Vendedores</a>
-        </div>
-        <div>
-          <a class="navbar-brand" href="/" onclick="logOut()">Cerrar Sesion</a>
-        </div>
-      </header>
-      <h1>Bienvenido al Sistema de Facturación</h1>
-      <p>
-        <strong>Home:</strong> Página principal, regresar a esta pestaña.<br />
-        <strong>Facturas:</strong> Cargar, modificar y borrar facturas.<br />
-        <strong>Clientes:</strong> Cargar, modificar y borrar clientes.<br />
-        <strong>Productos:</strong> Cargar, modificar y borrar productos.<br />
-        <strong>Reportes:</strong> Visualizar reportes que detallan la cantidad
-        de facturas cargadas por usuario, para calcular comisiones.<br />
-        <strong>Cerrar Sesión:</strong> Cerrar la sesión actual.
-      </p>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Sistema de Facturación</title>
+  <link rel="icon" type="image/png" href="/img/logo.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+</head>
+
+<body onload="initLogin(); verifyAuthUser();">
+  <div class="container mt-2">
+    <header class="d-flex justify-content-between">
+      <div>
+        <a class="navbar-brand" href="/html/home.html">Home</a>
+        <a class="navbar-brand" href="/html/invoice.html">Facturas</a>
+        <a class="navbar-brand" href="/html/client.html">Clientes</a>
+        <a class="navbar-brand" href="/html/product.html">Productos</a>
+        <a class="navbar-brand" href="/html/reports.html">Reportes</a>
+        <a class="navbar-brand" href="/html/seller.html">Vendedores</a>
+      </div>
+      <div>
+        <a class="navbar-brand" href="/" onclick="logOut()">Cerrar Sesión</a>
+      </div>
+    </header>
+
+    <!-- Card Principal -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h1 class="card-title">Bienvenido al Sistema de Facturación</h1>
+      </div>
     </div>
 
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-      crossorigin="anonymous"
-    ></script>
-    <script src="/js/my-login.js"></script>
-  </body>
+    <!-- Card Home -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Home</h5>
+        <p class="card-text">Página principal, regresar a esta pestaña.</p>
+      </div>
+    </div>
+
+    <!-- Card Facturas -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Facturas</h5>
+        <p class="card-text">Cargar, modificar y borrar facturas.</p>
+      </div>
+    </div>
+
+    <!-- Card Clientes -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Clientes</h5>
+        <p class="card-text">Cargar, modificar y borrar clientes.</p>
+      </div>
+    </div>
+
+    <!-- Card Productos -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Productos</h5>
+        <p class="card-text">Cargar, modificar y borrar productos.</p>
+      </div>
+    </div>
+
+    <!-- Card Reportes -->
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Reportes</h5>
+        <p class="card-text">Visualizar reportes que detallan la cantidad de facturas cargadas por usuario, para
+          calcular comisiones.</p>
+      </div>
+    </div>
+
+    <!-- Puedes replicar la estructura de las cards para otras secciones como Vendedores, si es necesario -->
+
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+  <script src="/js/my-login.js"></script>
+</body>
+
 </html>
